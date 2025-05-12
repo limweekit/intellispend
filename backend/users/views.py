@@ -1,11 +1,14 @@
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 import json
 
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
     # View for registering a new user
     if request.method == 'POST':
@@ -24,7 +27,8 @@ def register_user(request):
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def login_user(request):
     # View for logging in a user
     if request.method == 'POST':
@@ -34,14 +38,19 @@ def login_user(request):
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            return JsonResponse({'message': 'Logged in successfully'})
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({
+                'message': 'Logged in successfully',
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh)
+            })
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_users(request):
     # View to get all users
     if request.method == 'GET':
@@ -49,12 +58,14 @@ def get_all_users(request):
         users_list = [{
             "username": user.username,
             "password": user.password,
-            "email": user.email} for user in users]
+            "email": user.email
+        } for user in users]
         return JsonResponse({'users': users_list})
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user(request, username):
     # View to get a user by their username
     if request.method == 'GET':
@@ -71,26 +82,32 @@ def get_user(request, username):
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-@csrf_exempt
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_user(request):
-    # View for updating user password/email
+    # View for updating user details
+    data = request.data
+
     if request.method == 'PUT':
-        data = json.loads(request.body)
+        username = data.get('username')
         email = data.get('email')
         password = data.get('password')
 
+        if username:
+            request.user.username = username
         if email:
             request.user.email = email
-            request.user.save()
         if password:
             request.user.set_password(password)
-            request.user.save()
 
+        request.user.save()
         return JsonResponse({'message': 'User updated successfully'})
+
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-@csrf_exempt
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_user(request):
     # View for deleting user
     if request.method == 'DELETE':
