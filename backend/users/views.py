@@ -23,7 +23,17 @@ def register_user(request):
             return JsonResponse({'error': 'Email already taken'}, status=400)
 
         user = User.objects.create_user(username=username, password=password, email=email)
-        return JsonResponse({'message': 'User created successfully'})
+        refresh = RefreshToken.for_user(user)
+
+        return JsonResponse({
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email
+            }
+        })
     return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
@@ -40,9 +50,13 @@ def login_user(request):
         if user is not None:
             refresh = RefreshToken.for_user(user)
             return JsonResponse({
-                'message': 'Logged in successfully',
                 'access_token': str(refresh.access_token),
-                'refresh_token': str(refresh)
+                'refresh_token': str(refresh),
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email
+                }
             })
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
