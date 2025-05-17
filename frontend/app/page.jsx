@@ -1,7 +1,7 @@
 "use client"
 
 import { useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 export default function HomePage() {
@@ -10,10 +10,10 @@ export default function HomePage() {
 
     // if user has no access token i.e. not logged in, redirect to login page
     useEffect(() => {
-      if (currentUser?.access_token === null) {
-          router.replace("/login")
-      }
-    }, [currentUser]);
+      if (!localStorage.getItem("access_token")) {
+          router.replace("/login");
+        }
+    }, []);
 
     return (
       <section className="text-center">
