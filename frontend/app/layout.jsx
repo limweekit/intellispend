@@ -7,6 +7,9 @@ import { AuthContextProvider } from "@/context/AuthContext";
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { LoadingProvider } from "@/context/LoadingContext";
+import Spinner from "@/components/Spinner";
+
 
 export default function RootLayout({ children }) {
     const router = useRouter();
@@ -28,11 +31,14 @@ export default function RootLayout({ children }) {
         <html lang="en">
           <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
               <AuthContextProvider>
-                {showLayout && <Header />}
-                    <main className="flex-grow container mx-auto px-4 py-8">
-                        {children}
-                    </main>
-                  {showLayout && <Footer />}
+                <LoadingProvider>
+                    <Spinner />
+                      {showLayout && <Header />}
+                        <main className="flex-grow container mx-auto px-4 py-8">
+                            {children}
+                        </main>
+                      {showLayout && <Footer />}
+                </LoadingProvider>
               </AuthContextProvider>
           </body>
         </html>

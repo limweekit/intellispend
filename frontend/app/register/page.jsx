@@ -8,6 +8,8 @@ import { AuthContext } from "@/context/AuthContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useLoading } from "@/context/LoadingContext";
+
 
 // Form validation schema
 const schema = yup.object().shape({
@@ -36,6 +38,7 @@ const Register = () => {
     const { currentUser } = useContext(AuthContext);
     const [err, setErr] = useState(null);
     const router = useRouter();
+    const { setIsLoading } = useLoading();
 
     const { register, handleSubmit, formState: { errors } } = useForm(
         { resolver: yupResolver(schema) }
@@ -54,6 +57,8 @@ const Register = () => {
     }, [currentUser]);
 
     const onSubmit = async(data) => {
+        setIsLoading(true);
+
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, data)
             localStorage.setItem('access_token', res.data.access_token)
@@ -61,6 +66,8 @@ const Register = () => {
             router.push("/")
         } catch(err) {
             setErr(err?.response?.data || "Registration failed");
+        } finally {
+            setIsLoading(false);
         }
     }
 

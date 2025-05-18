@@ -8,6 +8,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useLoading } from "@/context/LoadingContext";
 
 
 // Form validation schema
@@ -32,6 +33,7 @@ const Login = () => {
     const { currentUser } = useContext(AuthContext);
     const router = useRouter();
     const [err, setErr] = useState(null);
+    const { setIsLoading } = useLoading();
 
     const { register, handleSubmit, formState: { errors } } = useForm(
         { resolver: yupResolver(schema) }
@@ -50,6 +52,8 @@ const Login = () => {
     }, [currentUser]);
 
     const onSubmit = async (data) => {
+        setIsLoading(true);
+
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/login`, data);
             localStorage.setItem('access_token', res.data.access_token)
@@ -57,6 +61,8 @@ const Login = () => {
             router.push("/")
         } catch(err) {
             setErr(err?.response?.data || "Login failed, please try again");
+        } finally {
+            setIsLoading(false);
         }
     }
 
