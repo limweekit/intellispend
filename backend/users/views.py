@@ -4,25 +4,16 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-import json
+from .serializers import RegisterSerializer
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_user(request):
     # View for registering a new user
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        email = data.get('email')
-
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({'error': 'Username already taken'}, status=400)
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({'error': 'Email already taken'}, status=400)
-
-        user = User.objects.create_user(username=username, password=password, email=email)
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
         refresh = RefreshToken.for_user(user)
 
         return JsonResponse({
@@ -41,26 +32,23 @@ def register_user(request):
 @permission_classes([AllowAny])
 def login_user(request):
     # View for logging in a user
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
+    username = request.data.get('username')
+    password = request.data.get('password')
 
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            return JsonResponse({
-                'access_token': str(refresh.access_token),
-                'refresh_token': str(refresh),
-                'user': {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email
-                }
-            })
-        else:
-            return JsonResponse({'error': 'Invalid credentials'}, status=400)
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email
+            }
+        })
+    else:
+        return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
 
 @api_view(['GET'])

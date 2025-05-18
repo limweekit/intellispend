@@ -5,19 +5,41 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios'
 import { AuthContext } from "@/context/AuthContext";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+// Form validation schema
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .min(2, "Username must be at least 2 characters")
+    .required("Username is required"),
+
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Email must be valid"),
+});
 
 
 const Register = () => {
     const { currentUser } = useContext(AuthContext);
-    const [err, setError] = useState(null);
+    const [err, setErr] = useState(null);
     const router = useRouter();
 
-
-    const [inputs, setInputs] = useState({
-        username: "",
-        password: "",
-        email: "",
-    })
+    const { register, handleSubmit, formState: { errors } } = useForm(
+        { resolver: yupResolver(schema) }
+    );
 
     // Check if user is already logged in i.e. access token is present in local storage
     // If not logged in, redirect to login page
@@ -31,21 +53,14 @@ const Register = () => {
       }
     }, [currentUser]);
 
-
-    const handleChange = e => {
-        setInputs(prev=>({...prev, [e.target.name]: e.target.value}))
-    }
-
-
-    const handleSubmit = async e => {
-        e.preventDefault()
+    const onSubmit = async(data) => {
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, inputs)
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, data)
             localStorage.setItem('access_token', res.data.access_token)
             localStorage.setItem('user_id', res.data.user.id)
             router.push("/")
         } catch(err) {
-            setError(err?.response?.data || "Registration failed");
+            setErr(err?.response?.data || "Registration failed");
         }
     }
 
@@ -54,31 +69,43 @@ const Register = () => {
         <div className="flex items-center justify-center min-h-screen bg-black-100">
             <div className="bg-black p-8 rounded-2xl shadow-md w-full max-w-md">
                 <h1 className="text-2xl font-bold text-center mb-6">Create an Account</h1>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                        required
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                    <input
-                        required
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                    <input
-                        required
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div>
+                        <input
+                            {...register("username")}
+                            placeholder="Username"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.username && (
+                            <p className="text-red-500 text-sm mt-2">
+                                {errors.username.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <input
+                            {...register("password")}
+                            placeholder="Password"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.password && (
+                            <p className="text-red-500 text-sm mt-2">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <input
+                            {...register("email")}
+                            placeholder="Email"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.email && (
+                            <p className="text-red-500 text-sm mt-2">
+                                {errors.email.message}
+                            </p>
+                        )}
+                    </div>
                     <button
                         type="submit"
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition duration-200"
