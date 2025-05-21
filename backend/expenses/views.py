@@ -76,3 +76,13 @@ def delete_expense(request, expenseId):
             return JsonResponse({'message': 'Expense deleted successfully'}, status=204)
         except Expense.DoesNotExist:
             return JsonResponse({'error': 'Expense not found'}, status=404)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_expenses_by_category(request, categoryId):
+    # view to get all expenses in a category
+    if request.method == 'GET':
+        expenses = Expense.objects.filter(user=request.user, category__category_id=categoryId)
+        serializer = ExpenseSerializer(expenses, many=True)
+        return JsonResponse({'expenses': serializer.data}, safe=False)
