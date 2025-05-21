@@ -25,7 +25,7 @@ def register_user(request):
                 'email': user.email
             }
         })
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+    return JsonResponse(serializer.errors, status=400)
 
 
 @api_view(['POST'])
