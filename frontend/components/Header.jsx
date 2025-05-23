@@ -30,18 +30,21 @@ export default function Header() {
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <Link
               href="/"
-              className="text-2xl font-semibold cursor-pointer"
+              className="text-2xl text-gray-800 font-semibold cursor-pointer"
             >
               IntelliSpend
             </Link>
             <nav className="space-x-4">
-              <Link href="/" className="hover:text-blue-600">
+              <Link href="/" className="text-gray-800 hover:text-blue-600">
                 Home
               </Link>
-              <Link href="/expenses" className="hover:text-blue-600">
+              <Link href="/expenses" className="text-gray-800 hover:text-blue-600">
                 Expenses
               </Link>
-              <button onClick={handleLogout} className="hover:text-red-600">
+              <Link href="/profile" className="text-gray-800 hover:text-blue-600">
+                Profile
+              </Link>
+              <button onClick={handleLogout} className="text-gray-800 hover:text-red-600">
                   Logout
               </button>
             </nav>
