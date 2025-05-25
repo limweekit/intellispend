@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
       <AuthContextProvider>
         <LoadingProvider>
           <Spinner />
-            <main className="flex-grow container mx-auto px-4 py-8">
+            <main className="flex-grow min-h-screen flex flex-col items-center justify-center">
               {children}
             </main>
         </LoadingProvider>
