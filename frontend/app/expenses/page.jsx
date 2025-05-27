@@ -1,16 +1,15 @@
 "use client"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { GET_EXPENSES_KEY, CREATE_EXPENSE_KEY, DELETE_EXPENSE_KEY, UPDATE_EXPENSE_KEY } from "../lib/constants.js";
-import { getExpenses, createExpense, updateExpense, deleteExpense } from "./api.js";
+import { useQuery } from "@tanstack/react-query";
+import { GET_EXPENSES_KEY } from "../lib/constants.js";
+import { getExpenses } from "./api.js";
 import { useState } from "react";
 import ExpensesForm from "./ExpensesForm.jsx";
 import ExpensesList from "./ExpensesList.jsx";
 
 export default function ExpensesPage() {
-    const queryClient = useQueryClient();
-    const [isCreating, setIsCreating] = useState(true);
+    const [, setIsCreating] = useState(true);
 
-    const { data: expenses, isLoading, isError, isSuccess } = useQuery({
+    const { data: expenses, isLoading } = useQuery({
         queryKey: [GET_EXPENSES_KEY],
         queryFn: getExpenses,
     });
