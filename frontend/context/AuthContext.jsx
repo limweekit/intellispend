@@ -1,52 +1,61 @@
-"use client"
+"use client";
 
-import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import { createContext, useState, useEffect } from "react";
+import API from "@/app/lib/api";             
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({
+  currentUser: null,
+  login: async () => {},
+  logout: () => {},
+  authLoaded: false,
+});
 
+export const AuthContextProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
-// Provider that wraps the app and manages auth state
-export const AuthContextProvider = ({children}) => {
-    const [currentUser, setCurrentUser] = useState(null);
-
-
-    // On component mount, load user data from local storage
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          setCurrentUser(JSON.parse(storedUser));
-        }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        setCurrentUser(JSON.parse(stored));
       }
-    }, []);
+    }
+    setAuthLoaded(true);
+  }, []);
 
+  useEffect(() => {
+    if (!authLoaded) return;
 
-    // update local storage whenever the user state changes
-    useEffect(() => {
-      if (typeof window !== "undefined" && currentUser) {
-        localStorage.setItem("user", JSON.stringify(currentUser));
+    if (currentUser) {
+      localStorage.setItem("user", JSON.stringify(currentUser));
+      localStorage.setItem("access_token", currentUser.access_token);
+      if (currentUser.refresh_token) {
+        localStorage.setItem("refresh_token", currentUser.refresh_token);
       }
-    }, [currentUser]);
-
-
-    // login and logout functions
-    const login = async (inputs) => {
-      const res = await axios.post("/users/login", inputs);
-      setCurrentUser(res.data);
-    };
-
-    const logout = () => {
+    } else {
+      localStorage.removeItem("user");
       localStorage.removeItem("access_token");
-      localStorage.removeItem("user_id");
-      setCurrentUser(null);
-    };
+      localStorage.removeItem("refresh_token");
+    }
+  }, [currentUser, authLoaded]);
 
+  // Login & logout
+  const login = async (credentials) => {
+    const res = await API.post("/users/login", credentials);
+    setCurrentUser(res.data);
+    return res.data;
+  };
 
-    // Provide context values to children components
-    return (
-        <AuthContext.Provider value={{currentUser, login, logout}}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
+  const logout = () => {
+    setCurrentUser(null);
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ currentUser, login, logout, authLoaded, setCurrentUser }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};

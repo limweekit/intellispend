@@ -63,6 +63,7 @@ const Register = () => {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/register`, data)
             localStorage.setItem('access_token', res.data.access_token)
             localStorage.setItem('user_id', res.data.user.id)
+            await login(data)
             router.push("/")
         } catch(err) {
             setErr(err?.response?.data || "Registration failed");
@@ -86,7 +87,7 @@ const Register = () => {
                                 <input
                                     {...register("username")}
                                     placeholder="Username"
-                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm focus:border focus:outline-none"
+                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm text-gray-800 focus:border focus:outline-none"
                                 />
                                 {errors.username && (
                                     <p className="text-red-500 text-sm mt-2">
@@ -98,7 +99,7 @@ const Register = () => {
                                 <input
                                     {...register("password")}
                                     placeholder="Password"
-                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm focus:border focus:outline-none"
+                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm text-gray-800 focus:border focus:outline-none"
                                 />
                                 {errors.password && (
                                     <p className="text-red-500 text-sm mt-2">
@@ -110,7 +111,7 @@ const Register = () => {
                                 <input
                                     {...register("email")}
                                     placeholder="Email"
-                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm focus:border focus:outline-none"
+                                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-300 placeholder-gray-500 text-sm text-gray-800 focus:border focus:outline-none"
                                 />
                                 {errors.email && (
                                     <p className="text-red-500 text-sm mt-2">
