@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import ProfileCard from "@/components/ProfileCard";
@@ -8,26 +8,31 @@ import ProfileCard from "@/components/ProfileCard";
 export default function ProfilePage() {
   const { currentUser, authLoaded } = useContext(AuthContext);
   const router = useRouter();
-  const [user, setUser] = useState(null);
 
-  // Only redirect after we know authLoaded is true
+  // Redirect to login if auth has loaded and there's no user
   useEffect(() => {
     if (!authLoaded) return;
-
     if (!currentUser) {
       router.replace("/login");
-    } else {
-      setUser(currentUser.user);
     }
   }, [authLoaded, currentUser, router]);
 
-  if (!authLoaded || !user) {
+  // While we're checking auth
+  if (!authLoaded) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-700">
-        { !authLoaded ? "Checking authentication…" : "Loading profile…" }
+        Checking authentication…
       </div>
     );
   }
+
+  // If there's no user, don't render
+  if (!currentUser) {
+    return null;
+  }
+
+  // Pull the user payload straight from context
+  const { user } = currentUser;
 
   return (
     <div className="flex justify-center px-4">
@@ -37,3 +42,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
