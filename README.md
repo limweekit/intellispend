@@ -1,1 +1,226 @@
-hello
+<a name="readme-top"></a>
+<div align="center">
+  <img src="IntelliSpendLogo.png" alt="logo" width="140"  height="auto" />
+  <br/>
+
+  <h3><b>IntelliSpend</b></h3>
+
+</div>
+
+<!-- TABLE OF CONTENTS -->
+
+# 📗 Table of Contents
+
+- [📖 About the Project](#about-project)
+  - [🛠 Built With](#built-with)
+    - [Tech Stack](#tech-stack)
+    - [Key Features](#key-features)
+- [💻 Getting Started](#getting-started-docker)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Create .env files](#create-env-files)
+  - [Usage](#usage)
+- [👥 Authors](#authors)
+- [🔭 Future Features](#future-features)
+
+<!-- PROJECT DESCRIPTION -->
+
+# 📖 IntelliSpend <a name="about-project"></a>
+
+Our project aims to empower users with AI-powered financial insights that go beyond mere expense tracking. Our system will analyse spending behavior and offer personalised budgeting recommendations to help users optimise their finances effortlessly.
+
+
+## 🛠 Built With <a name="built-with"></a>
+
+### Tech Stack <a name="tech-stack"></a>
+
+<details>
+  <summary>Client</summary>
+  <ul>
+    <li><a href="https://nextjs.org/">Next.js</a></li>
+    <li><a href="tailwindcss.com">TailwindCSS</a></li>
+  </ul>
+</details>
+
+<details>
+  <summary>Server</summary>
+  <ul>
+    <li><a href="https://djangoproject.com/">Django</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>Database</summary>
+  <ul>
+    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>Version Control/CICD</summary>
+  <ul>
+    <li><a href="https://www.docker.com/">Docker</a></li>
+    <li><a href="https://www.git-scm.com/">Git</a></li>
+    <li><a href="https://www.github.com/">GitHub</a></li>
+  </ul>
+</details>
+
+<!-- Features -->
+
+### Key Features <a name="key-features"></a>
+
+- **[User Login/Registration]**
+- **[User Profile Management]**
+- **[REST APIs for Expenses and their Categories]**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+
+## 💻 Getting Started (Docker) <a name="getting-started-docker"></a>
+
+To get a local copy up and running, follow these steps.
+
+### Prerequisites
+
+In order to run this project you need to install the following:
+
+- PostgreSQL 13+
+- Node.js 18+
+- Python 3.10+
+- Docker
+- Docker Desktop
+
+### Setup
+
+Clone this repository to your desired folder:
+
+```sh
+  cd my-folder
+  git clone https://github.com/yh13431/intellispend.git
+```
+
+### Create .env files
+
+Create .env files for both the backend (Django) and frontend (Next.js) by copying their respective example.env files and updating their variables based on your local environment.
+
+```sh
+  cp backend/example.env backend/.env
+  cp frontend/example.env frontend/.env
+```
+
+### Usage
+
+To run the entire app, execute the following command from the root folder:
+
+```sh
+  docker-compose up --build
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 💻 Getting Started (Non-Docker) <a name="getting-started-non-docker"></a>
+
+To get a local copy up and running, follow these steps.
+
+### Prerequisites
+
+In order to run this project you need to install the following:
+
+- PostgreSQL 13+
+- Node.js 18+
+- Python 3.10+
+
+### Setup
+
+Clone this repository to your desired folder:
+
+```sh
+  cd my-folder
+  git clone https://github.com/yh13431/intellispend.git
+```
+
+### Create .env files
+
+Create .env files for both the backend (Django) and frontend (Next.js) by copying their respective example.env files and updating their variables based on your local environment.
+
+```sh
+  cp backend/example.env backend/.env
+  cp frontend/example.env frontend/.env
+```
+
+### Usage
+
+To run the database, ensure you have a local PostgreSQL server running. Log in:
+
+```sh
+  psql -U postgres  
+```
+
+And create a new database:
+
+```sh
+  CREATE DATABASE intellispend_db;
+  CREATE USER intellispend_user WITH PASSWORD 'your_password';
+  GRANT ALL PRIVILEGES ON DATABASE intellispend_db TO intellispend_user;
+```
+
+The DATABASE_URL you will use for your backend/.env file is: 
+
+```sh
+  DATABASE_URL=postgres://intellispend_user:your_password@localhost:5432/intellispend_db
+```
+
+To run the backend, execute the following commands from the root folder:
+
+```sh
+  cd backend
+  python -m venv venv
+  .\venv\Scripts\activate
+  pip install -r requirements.txt
+
+  python manage.py makemigrations
+  python manage.py migrate
+  python manage.py runserver
+```
+
+To run the frontend, execute the following commands from the root folder:
+
+```sh
+  cd frontend
+  npm install --force
+  npm run dev
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- AUTHORS -->
+
+## 👥 Authors <a name="authors"></a>
+
+👤 **Author1**
+
+- Thia Yi Hong [A0309206L]
+  
+👤 **Author2**
+
+- Lim Wee Kit [A0309127H]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- FUTURE FEATURES -->
+
+## 🔭 Future Features <a name="future-features"></a>
+
+### Milestone 2
+
+- [ ] **[Smart Budgeting]**
+- [ ] **[Goal Setting and Progress Tracking]**
+- [ ] **[Personal Finance Tips]**
+
+### Milestone 3
+
+- [ ] **[Joint Budgeting System]**
+- [ ] **[Bill Reminders]**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
