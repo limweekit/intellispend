@@ -132,8 +132,13 @@ export default function Register() {
           </form>
         </div>
 
+        {/* Logo side panel */}
         <div className="sm:w-[60%] lg:w-[50%] bg-cover bg-center items-center justify-center hidden md:flex">
-          <img alt="register image" className="h-[500px] object-contain" />
+          <img
+            src="/IntelliSpendLogo.png"
+            alt="IntelliSpend Logo"
+            className="h-[500px] object-contain"
+          />
         </div>
       </div>
     </div>
