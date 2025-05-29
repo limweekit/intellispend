@@ -108,8 +108,13 @@ export default function Login() {
           </form>
         </div>
 
-        <div className="sm:w-[60%] lg:w-[50%] hidden md:flex bg-cover bg-center">
-          <img alt="login image" className="h-[500px] object-contain" />
+          {/* Logo side panel */}
+        <div className="sm:w-[60%] lg:w-[50%] bg-cover bg-center items-center justify-center hidden md:flex">
+          <img
+            src="/IntelliSpendLogo.png"
+            alt="IntelliSpend Logo"
+            className="h-[500px] object-contain"
+          />
         </div>
       </div>
     </div>
