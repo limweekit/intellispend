@@ -1,6 +1,6 @@
 <a name="readme-top"></a>
 <div align="center">
-  <img src="IntelliSpendLogo.png" alt="logo" width="140"  height="auto" />
+  <img src="frontend/public/IntelliSpendLogo.png" alt="logo" width="140"  height="auto" />
   <br/>
 
   <h3><b>IntelliSpend</b></h3>
