@@ -9,7 +9,9 @@ export default function HomePage() {
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!localStorage.getItem('access_token')) {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const token = storedUser?.access_token || storedUser?.user?.access_token;
+    if (!token) {
       router.replace('/login')
     }
   }, [router])
@@ -32,7 +34,7 @@ export default function HomePage() {
           </p>
           <button
             onClick={handlePrimary}
-            className="mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
+            className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
           >
             Track Your Expenses
           </button>

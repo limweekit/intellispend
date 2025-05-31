@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GET_EXPENSES_KEY, GET_CATEGORIES_KEY } from "../lib/constants.js";
 import { getExpenses, getCategories } from "./api.js";
 import ExpensesForm from "./ExpensesForm.jsx";
 import ExpensesList from "./ExpensesList.jsx";
+import { useLoading } from "@/context/LoadingContext";
 
 export default function ExpensesPage() {
   const [, setIsCreating] = useState(true);
@@ -14,6 +15,7 @@ export default function ExpensesPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { setIsLoading } = useLoading();
 
   const { data: expenses, isLoading: loadingExpenses } = useQuery({
     queryKey: [GET_EXPENSES_KEY],
@@ -27,9 +29,14 @@ export default function ExpensesPage() {
 
   const categories = categoriesData?.categories || [];
 
-  if (loadingExpenses || loadingCategories) {
-    return <p className="p-6 text-center text-gray-500">Loading...</p>;
-  }
+  useEffect(() => {
+    if (loadingExpenses || loadingCategories) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [loadingExpenses, loadingCategories, setIsLoading]);
+
 
   // Color mapping
   const defaultColors = {
@@ -181,7 +188,7 @@ export default function ExpensesPage() {
         {/* Category Filter */}
         <div className="flex-1 min-w-0 overflow-x-auto flex space-x-4 py-2">
           <button
-            className={`inline-block px-3 py-1 rounded-full font-medium flex-shrink-0 ${!selectedCategory ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-800'}`}
+            className={`cursor-pointer inline-block px-3 py-1 rounded-full font-medium flex-shrink-0 ${!selectedCategory ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-800'}`}
             onClick={() => setSelectedCategory(null)}
           >
             All
@@ -189,7 +196,7 @@ export default function ExpensesPage() {
           {categories.map((cat) => (
             <button
               key={cat.category_id}
-              className={`inline-block px-3 py-1 rounded-full font-medium flex-shrink-0 ${selectedCategory === cat.category_id ? 'text-white' : 'text-gray-800'}`}
+              className={`cursor-pointer inline-block px-3 py-1 rounded-full font-medium flex-shrink-0 ${selectedCategory === cat.category_id ? 'text-white' : 'text-gray-800'}`}
               style={{
                 backgroundColor:
                   selectedCategory === cat.category_id
