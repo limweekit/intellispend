@@ -2,15 +2,26 @@
 
 import Link from 'next/link'
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useLoading } from '@/context/LoadingContext';
 
 
 export default function Header() {
-    const { currentUser, logout } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
     const router = useRouter();
     const { setIsLoading } = useLoading();
+
+
+    const navigate = async (path) => {
+        setIsLoading(true);
+        try {
+          await new Promise((res) => setTimeout(res, 300)); // optional delay
+          router.push(path);
+        } finally {
+          setIsLoading(false);
+        }
+    };
 
 
     // On logout, redirect user to login page
@@ -28,26 +39,38 @@ export default function Header() {
     return (
         <header className="bg-white shadow">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <Link
-              href="/"
+            <button
+              onClick={() => navigate("/")}
               className="text-2xl text-gray-800 font-semibold cursor-pointer"
             >
               IntelliSpend
-            </Link>
-            <nav className="space-x-4">
-              <Link href="/" className="text-gray-800 hover:text-blue-600">
-                Home
-              </Link>
-              <Link href="/expenses" className="text-gray-800 hover:text-blue-600">
-                Expenses
-              </Link>
-              <Link href="/profile" className="text-gray-800 hover:text-blue-600">
-                Profile
-              </Link>
-              <button onClick={handleLogout} className="text-gray-800 hover:text-red-600">
-                  Logout
-              </button>
-            </nav>
+            </button>
+             <nav className="space-x-4">
+               <button
+                 onClick={() => navigate("/")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Home
+               </button>
+               <button
+                 onClick={() => navigate("/expenses")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Expenses
+               </button>
+               <button
+                 onClick={() => navigate("/profile")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Profile
+               </button>
+               <button
+                   onClick={handleLogout}
+                   className="cursor-pointer text-gray-800 hover:text-red-600"
+               >
+                   Logout
+               </button>
+             </nav>
           </div>
         </header>
       )

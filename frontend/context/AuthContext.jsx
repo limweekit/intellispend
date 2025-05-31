@@ -29,14 +29,6 @@ export const AuthContextProvider = ({ children }) => {
 
     if (currentUser) {
       localStorage.setItem("user", JSON.stringify(currentUser));
-      localStorage.setItem("access_token", currentUser.access_token);
-      if (currentUser.refresh_token) {
-        localStorage.setItem("refresh_token", currentUser.refresh_token);
-      }
-    } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
     }
   }, [currentUser, authLoaded]);
 
@@ -49,6 +41,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = () => {
     setCurrentUser(null);
+    localStorage.removeItem("user");
   };
 
   return (

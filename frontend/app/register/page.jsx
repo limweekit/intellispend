@@ -44,7 +44,7 @@ export default function Register() {
 
   // If already logged in, go home
   useEffect(() => {
-    if (currentUser?.access_token) {
+    if (currentUser?.user?.access_token) {
       router.replace("/");
     }
   }, [currentUser, router]);

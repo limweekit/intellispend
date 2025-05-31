@@ -5,9 +5,11 @@ const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/expenses`;
 const categoriesUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`;
 
 const getToken = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('access_token');
-  }
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const token = storedUser?.access_token || storedUser?.user?.access_token;
+    if (typeof window !== 'undefined') {
+      return token;
+    }
   return null;
 };
 

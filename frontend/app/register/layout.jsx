@@ -1,10 +1,13 @@
-"use client"
 import '../globals.css'
 import { AuthContextProvider } from "@/context/AuthContext";
-import { useEffect, useState } from 'react';
 import { LoadingProvider } from "@/context/LoadingContext";
 import Spinner from "@/components/Spinner";
 
+
+export const metadata = {
+  title: "Register - IntelliSpend",
+  description: "Track and manage your personal expenses",
+};
 
 export default function RootLayout({ children }) {
     return (

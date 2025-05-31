@@ -6,6 +6,7 @@ import { createExpense, updateExpense, createCategory } from "./api.js";
 import { GET_EXPENSES_KEY, GET_CATEGORIES_KEY } from "../lib/constants.js";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useLoading } from "@/context/LoadingContext";
 
 export default function ExpensesForm({
   initialData,
@@ -22,6 +23,7 @@ export default function ExpensesForm({
     "Others",
   ];
 
+  const { setIsLoading } = useLoading();
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
@@ -41,6 +43,7 @@ export default function ExpensesForm({
       date: Yup.date().required("Date is required"),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      setIsLoading(true);
       let categoryId = values.category;
 
       if (showNewCategoryInput && newCategoryName.trim()) {
@@ -74,6 +77,7 @@ export default function ExpensesForm({
         console.error("Failed to submit form:", err);
       } finally {
         setSubmitting(false);
+        setIsLoading(false);
       }
     },
   });
@@ -101,7 +105,7 @@ export default function ExpensesForm({
         value={formik.values.amount}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        className="border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
+        className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
       />
       {formik.touched.amount && formik.errors.amount && (
         <p className="text-red-500 text-sm">{formik.errors.amount}</p>
@@ -112,7 +116,7 @@ export default function ExpensesForm({
         name="category"
         value={showNewCategoryInput ? "__new__" : formik.values.category}
         onChange={handleCategoryChange}
-        className="border px-3 py-2 w-full rounded text-gray-900"
+        className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900"
       >
         <option value="">Select a category</option>
         <optgroup label="Common">
@@ -142,7 +146,7 @@ export default function ExpensesForm({
           placeholder="New category name"
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
-          className="border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
+          className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
         />
       )}
 
@@ -153,7 +157,7 @@ export default function ExpensesForm({
         value={formik.values.date}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        className="border px-3 py-2 w-full rounded text-gray-900"
+        className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900"
       />
       {formik.touched.date && formik.errors.date && (
         <p className="text-red-500 text-sm">{formik.errors.date}</p>
@@ -166,7 +170,7 @@ export default function ExpensesForm({
         value={formik.values.description}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        className="border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
+        className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900 placeholder-gray-500"
       />
       {formik.touched.description && formik.errors.description && (
         <p className="text-red-500 text-sm">{formik.errors.description}</p>
@@ -176,7 +180,7 @@ export default function ExpensesForm({
       <div className="flex space-x-4">
         <button
           type="submit"
-          className="bg-blue-600 hover:opacity-90 text-white px-4 py-2 rounded"
+          className="cursor-pointer bg-blue-600 hover:opacity-90 text-white px-4 py-2 rounded"
           disabled={formik.isSubmitting}
         >
           {expenseId ? "Update Expense" : "Add Expense"}
@@ -185,7 +189,7 @@ export default function ExpensesForm({
           <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-300 text-black px-4 py-2 rounded"
+            className="cursor-pointer bg-gray-300 text-black px-4 py-2 rounded"
           >
             Cancel
           </button>
