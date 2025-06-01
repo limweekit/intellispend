@@ -15,6 +15,7 @@
   - [🛠 Built With](#built-with)
     - [Tech Stack](#tech-stack)
     - [Key Features](#key-features)
+  - [🚀 Showcase](#showcase)
 - [💻 Getting Started](#getting-started-docker)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -74,6 +75,15 @@ Our project aims to empower users with AI-powered financial insights that go bey
 - **[REST APIs for Expenses and their Categories]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🚀 Showcase <a name="showcase"></a>
+Will be converted into a live demo in future milestones
+
+Login
+![Image](https://github.com/user-attachments/assets/349f89d4-1d3c-4eaf-86d9-d6b13a742ee4)
+
+Register
+![Image](https://github.com/user-attachments/assets/bf632460-5d5e-4bcd-8828-4207218418ba)
 
 <!-- GETTING STARTED -->
 
