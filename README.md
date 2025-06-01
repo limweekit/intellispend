@@ -79,28 +79,45 @@ Our project aims to empower users with AI-powered financial insights that go bey
 ## 🚀 Showcase <a name="showcase"></a>
 Will be converted into a live demo in future milestones
 
+
 Login
+
 ![Image](https://github.com/user-attachments/assets/349f89d4-1d3c-4eaf-86d9-d6b13a742ee4)
 
+
 Register
+
 ![Image](https://github.com/user-attachments/assets/bf632460-5d5e-4bcd-8828-4207218418ba)
 
+
 Homepage
+
 ![Image](https://github.com/user-attachments/assets/390d21b0-5a51-4f28-9e1c-0c92229f2753)
 
+
 User Profile
+
 ![Image](https://github.com/user-attachments/assets/9dd90020-7264-48a1-b87a-f41d726ec2a7)
 
+
 Edit User
+
 ![Image](https://github.com/user-attachments/assets/870a060f-95a5-489a-b7bf-57b00215adc4)
 
+
 Expenses, creating a new category
+
 ![Image](https://github.com/user-attachments/assets/a724c1da-7f73-4ef3-8c83-b86b6d4d0273)
+
 ![Image](https://github.com/user-attachments/assets/5abadff2-0d8c-4889-b902-649ac91c86cf)
 
+
 Editing an existing expense
+
 ![Image](https://github.com/user-attachments/assets/08bffd34-acb6-4bb1-aff8-39c0b648196a)
+
 ![Image](https://github.com/user-attachments/assets/7bb24eb2-d144-4b96-bf1a-1e3155e985b5)
+
 
 <!-- GETTING STARTED -->
 
