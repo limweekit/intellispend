@@ -25,7 +25,7 @@ export default function ProfilePage() {
   return (
     <div className="flex justify-center px-4">
       <div className="w-full max-w-md">
-        <ProfileCard user={currentUser} />
+        <ProfileCard />
       </div>
     </div>
   );

@@ -88,6 +88,7 @@ def get_user(request, username):
 @permission_classes([IsAuthenticated])
 def update_user(request):
     # View for updating user details
+    user = request.user
     data = request.data
 
     if request.method == 'PUT':
@@ -96,14 +97,24 @@ def update_user(request):
         password = data.get('password')
 
         if username:
-            request.user.username = username
+            user.username = username
         if email:
-            request.user.email = email
+            user.email = email
         if password:
-            request.user.set_password(password)
+            user.set_password(password)
 
-        request.user.save()
-        return JsonResponse({'message': 'User updated successfully'})
+        user.save()
+        refresh = RefreshToken.for_user(user)
+
+        return JsonResponse({
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+            }
+        }, status=200)
 
     return JsonResponse({'error': 'Invalid method'}, status=405)
 

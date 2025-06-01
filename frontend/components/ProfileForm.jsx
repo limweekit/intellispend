@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import {useContext, useState} from "react";
 import { useRouter } from "next/navigation";
 import API from "@/app/lib/api";
 import { useLoading } from "@/context/LoadingContext";
 import {useFormik} from "formik";
+import {AuthContext} from "@/context/AuthContext";
 
 export default function ProfileForm({ initialUser, onUpdate }) {
   const [passError, setPassError] = useState("");
   const { isLoading, setIsLoading } = useLoading();
+  const router = useRouter();
+  const {setCurrentUser, currentUser} = useContext(AuthContext)
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +41,7 @@ export default function ProfileForm({ initialUser, onUpdate }) {
       try {
         await API.put("/users/update", payload);
         onUpdate({ username: values.username, email: values.email });
+        router.push("/profile")
       } catch (err) {
         console.error(err);
         const pwErrors = err?.response?.data?.password;
@@ -124,6 +128,14 @@ export default function ProfileForm({ initialUser, onUpdate }) {
         className="cursor-pointer w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:opacity-90 transition disabled:opacity-50"
       >
         {isLoading ? "Saving..." : "Save Changes"}
+      </button>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="cursor-pointer w-full bg-gray-500 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:opacity-90 transition disabled:opacity-50"
+        onClick={() => router.push("/profile")}
+      >
+        Back
       </button>
     </form>
   );
