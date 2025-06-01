@@ -4,21 +4,28 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import ProfileForm from "@/components/ProfileForm";
+import {useLoading} from "@/context/LoadingContext";
 
 export default function EditProfilePage() {
   const { currentUser, authLoaded, setCurrentUser } = useContext(AuthContext);
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
-    if (!authLoaded) return;
+    if (!authLoaded) {
+      setIsLoading(true);
+      return;
+    }
 
     if (!currentUser) {
+      setIsLoading(false);
       router.replace("/login");
     } else {
       setUser(currentUser.user);
+      setIsLoading(false);
     }
-  }, [authLoaded, currentUser, router]);
+  }, [authLoaded, currentUser, router, setIsLoading]);
 
   const handleUpdate = (updatedFields) => {
     const updatedUser = { ...user, ...updatedFields };
@@ -26,13 +33,7 @@ export default function EditProfilePage() {
     setCurrentUser({ ...currentUser, user: updatedUser });
   };
 
-  if (!authLoaded || !user) {
-    return (
-      <div className="flex items-center justify-center h-screen text-gray-700">
-        { !authLoaded ? "Checking authentication…" : "Loading…" }
-      </div>
-    );
-  }
+  if (!authLoaded || !user) return null;
 
   return (
     <div className="flex justify-center px-4">
