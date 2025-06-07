@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useLoading } from "@/context/LoadingContext";
 
+const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export default function ExpensesForm({
   initialData,
   expenseId,
@@ -15,6 +17,7 @@ export default function ExpensesForm({
   categories = [],
 }) {
   const queryClient = useQueryClient();
+  const { setIsLoading } = useLoading();
   const defaultCategoryNames = [
     "Transport",
     "Dining",
@@ -23,7 +26,6 @@ export default function ExpensesForm({
     "Others",
   ];
 
-  const { setIsLoading } = useLoading();
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
@@ -49,9 +51,20 @@ export default function ExpensesForm({
       if (showNewCategoryInput && newCategoryName.trim()) {
         const res = await createCategory(newCategoryName.trim());
         categoryId = res.category.category_id;
-      } else if (defaultCategoryNames.includes(values.category)) {
-        const res = await createCategory(values.category);
-        categoryId = res.category.category_id;
+      }
+      else if (uuidv4Regex.test(values.category)) {
+        categoryId = values.category;
+      }
+      else if (defaultCategoryNames.includes(values.category)) {
+        const existing = categories.find(
+          (c) => c.name.toLowerCase() === values.category.toLowerCase()
+        );
+        if (existing) {
+          categoryId = existing.category_id;
+        } else {
+          const res = await createCategory(values.category);
+          categoryId = res.category.category_id;
+        }
       }
 
       const payload = {
