@@ -1,4 +1,5 @@
 import uuid
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
@@ -15,3 +16,5 @@ class Goal(models.Model):
     name = models.TextField(blank=False, null=False)
     deadline = models.DateTimeField(default=default_deadline)
     created_at = models.DateTimeField(auto_now_add=True)
+    current_progress = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    recommended_actions = ArrayField(base_field=models.TextField(), null=True, blank=True, default=list)

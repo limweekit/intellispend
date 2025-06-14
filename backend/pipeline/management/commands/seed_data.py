@@ -66,7 +66,8 @@ class Command(BaseCommand):
                     name=f"Goal {_ + 1}",
                     amount=goal_amount,
                     created_at=created_at,
-                    deadline=target_date
+                    deadline=target_date,
+                    current_progress=round(random.uniform(0, goal_amount * 0.5), 2)
                 )
 
             self.stdout.write(self.style.SUCCESS(f'Seeded data for {username}: '

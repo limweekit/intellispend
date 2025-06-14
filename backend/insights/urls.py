@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import predict_goal_success
+from .views import goal_advice_view
 
 urlpatterns = [
-    path('predict', predict_goal_success, name='predict-goal-success'),
+    path('advice/<uuid:goal_id>', goal_advice_view, name='goal_advice'),
 ]
