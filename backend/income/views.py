@@ -16,7 +16,7 @@ def create_income(request):
         serializer.save(user=request.user)
         return JsonResponse({'income': serializer.data}, status=201)
 
-    return JsonResponse({'error': 'Income could not be created'}, status=400)
+    return JsonResponse({'errors': serializer.errors}, status=400)
 
 
 @api_view(['GET'])
