@@ -59,7 +59,7 @@ def update_category(request, categoryId):
             return JsonResponse({'error': 'Category not found'}, status=404)
 
         data = json.loads(request.body)
-        serializer = CategorySerializer(category, data=data, partial=True)
+        serializer = CategorySerializer(category, data=data, partial=True, context={'request': request})
 
         if serializer.is_valid():
             serializer.save()
