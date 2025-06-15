@@ -59,6 +59,18 @@ export default function Header() {
                  Expenses
                </button>
                <button
+                 onClick={() => navigate("/income")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Income
+               </button>
+               <button
+                 onClick={() => navigate("/goals")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Goals
+               </button>
+               <button
                  onClick={() => navigate("/profile")}
                  className="cursor-pointer text-gray-800 hover:text-blue-600"
                >

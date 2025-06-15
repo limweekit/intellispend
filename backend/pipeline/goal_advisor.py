@@ -54,10 +54,10 @@ class GoalAdvisor:
         amount_left = float(self.goal.amount) - self.get_current_progress()
 
         if amount_left <= 0:
-            return 1.0, 0.0, float(self.get_monthly_net_income())
+            return 0.0, float(self.get_monthly_net_income())
 
         if months_left <= 0:
-            return 0.0, amount_left, float(self.get_monthly_net_income())
+            return amount_left, float(self.get_monthly_net_income())
 
         required_monthly_save = amount_left / months_left
         current_savings = max(float(self.get_monthly_net_income()), 0)

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Zap, Tag, Target } from 'lucide-react'
+import { Calendar, Tag, Target } from 'lucide-react'
 
 export default function HomePage() {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function HomePage() {
             Manage Your Finances Effortlessly
           </h2>
           <p className="mt-4 text-xl text-white max-w-2xl">
-            Let us help you categorize expenses, set budgets, and track goals—all
+            Let us help you categorize expenses, track goals, and view your financial calendar — all
             in one place.
           </p>
           <button
@@ -48,14 +48,14 @@ export default function HomePage() {
             Key Features
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Smart Budgeting */}
+            {/* Financial Calendar */}
             <div className="flex flex-col items-center text-center">
-              <Zap className="w-12 h-12 text-indigo-600 mb-4" />
+              <Calendar className="w-12 h-12 text-indigo-600 mb-4" />
               <h4 className="text-xl text-gray-800 font-semibold mb-2">
-                Smart Budgeting
+                Financial Calendar
               </h4>
               <p className="text-gray-600">
-                AI-powered budgeting that adapts to your spending habits.
+                A unified timeline of all your financial events for smarter, proactive budgeting.
               </p>
             </div>
 
