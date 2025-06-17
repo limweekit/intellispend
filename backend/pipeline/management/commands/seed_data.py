@@ -26,7 +26,7 @@ class Command(BaseCommand):
             email = f'testuser{i+1}@example.com'
             user, created = User.objects.get_or_create(username=username, defaults={'email': email})
             if created:
-                user.set_password('password')
+                user.set_password('StrongPassword123!')
                 user.save()
                 self.stdout.write(f'Created user {username}')
             else:

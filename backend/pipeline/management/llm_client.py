@@ -6,28 +6,28 @@ OLLAMA_API_URL = os.getenv("OLLAMA_API_URL")
 
 def build_goal_advice_prompt(goal_name, gap, expense_list):
     lines = [
-        "You are a friendly, expert personal finance advisor.",
-        f"I have a savings goal “{goal_name}”.",
-        f"My target is to save an extra ${gap:.2f} per month to stay on track.",
+        "You are a friendly and expert personal finance advisor.",
+        f"The user is working towards the goal: “{goal_name}”.",
+        f"They need to save an additional ${gap:.2f} per month to stay on track.",
         "",
-        "Here is my most recent spending this month by category:",
+        "Below is their actual monthly spending, by category:",
     ]
     for cat, amt in expense_list:
         lines.append(f"- {cat}: ${amt:.2f}")
     lines += [
         "",
-        "Please provide actionable, realistic recommendations to cover up the gaps.",
-        "Offer as many or as few as needed.",
+        "Only refer to the categories listed above. Do not invent new categories or estimates.",
+        "Recommend only realistic, actionable reductions based on these categories.",
+        "If the gap is greater than total spending, say so clearly.",
         "",
-        "For each recommendation, include:",
-        "  • The category to adjust",
-        "  • A clear reduction target (either in percentages or absolute values)",
-        "  • The estimated monthly savings amount",
+        "For each suggestion, include:",
+        "• Category name (must match exactly)",
+        "• A clear reduction (in dollars or percentage)",
+        "• Estimated monthly savings (must match the reduction)",
         "",
-        "If I am already meeting or exceeding the monthly goal (gap ≤ 0),",
-        "just respond with “On track” and one sentence on how to maintain it.",
+        "Respond in one paragraph under 100 words.",
         "",
-        "Keep your tone friendly and concise. Please answer in full paragraph form and in less than 100 words.",
+        "Use a friendly and helpful tone."
     ]
     return "\n".join(lines)
 
