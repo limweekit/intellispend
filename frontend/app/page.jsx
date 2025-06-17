@@ -20,6 +20,48 @@ export default function HomePage() {
     router.push('/expenses')
   }
 
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}`;
+
+
+  const getToken = () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const token = storedUser?.access_token || storedUser?.user?.access_token;
+      if (typeof window !== 'undefined') {
+        return token;
+      }
+    return null;
+  };
+
+  const handleExport = async () => {
+    try {
+      const token = getToken();
+      if (!token) throw new Error('No access token found');
+
+      const response = await fetch(`${baseUrl}/exports/download_csv`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to export: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export failed:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero */}
@@ -37,6 +79,12 @@ export default function HomePage() {
             className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
           >
             Track Your Expenses
+          </button>
+          <button
+            onClick={handleExport}
+            className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
+          >
+              Export CSV
           </button>
         </main>
       </div>
