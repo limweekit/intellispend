@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'goals',
     'insights',
     'pipeline',
+    'django_celery_beat',
+    'exports.apps.ExportsConfig',
 ]
 
 REST_FRAMEWORK = {
@@ -163,3 +165,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Singapore'
