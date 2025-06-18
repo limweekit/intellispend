@@ -3,7 +3,7 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
-import ProfileCard from "@/components/ProfileCard";
+import ProfileCard from "@/app/profile/ProfileCard";
 
 export default function ProfilePage() {
   const { currentUser, authLoaded } = useContext(AuthContext);

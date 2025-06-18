@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
-import ProfileForm from "@/components/ProfileForm";
+import ProfileForm from "@/app/profile/ProfileForm";
 import {useLoading} from "@/context/LoadingContext";
 
 export default function EditProfilePage() {
