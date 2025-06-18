@@ -1,6 +1,5 @@
 "use client"
 
-import Link from 'next/link'
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -16,7 +15,7 @@ export default function Header() {
     const navigate = async (path) => {
         setIsLoading(true);
         try {
-          await new Promise((res) => setTimeout(res, 300)); // optional delay
+          await new Promise((res) => setTimeout(res, 300)); 
           router.push(path);
         } finally {
           setIsLoading(false);

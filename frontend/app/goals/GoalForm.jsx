@@ -13,6 +13,8 @@ export default function GoalForm({ initialData = {}, onCancel }) {
   const isEdit = Boolean(initialData.goal_id);
   const { setIsLoading } = useLoading();
 
+  const today = new Date().toISOString().split("T")[0];
+
   const formik = useFormik({
     initialValues: {
       name:     initialData.name     || "",
@@ -22,9 +24,14 @@ export default function GoalForm({ initialData = {}, onCancel }) {
         : "",
     },
     validationSchema: Yup.object({
-      name:     Yup.string().required("Name is required"),
-      amount:   Yup.number().positive("Must be > 0").required("Amount is required"),
-      deadline: Yup.date().required("Deadline is required"),
+      name:   Yup.string().required("Name is required"),
+      amount: Yup.number().positive("Must be > 0").required("Amount is required"),
+      deadline: Yup.date()
+        .required("Deadline is required")
+        .min(
+          today,
+          "Deadline cannot be in the past"
+        ),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       setIsLoading(true);
@@ -87,6 +94,7 @@ export default function GoalForm({ initialData = {}, onCancel }) {
         <input
           name="deadline"
           type="date"
+          min={today}
           className="cursor-pointer border px-3 py-2 w-full rounded text-gray-900"
           value={formik.values.deadline}
           onChange={formik.handleChange}
