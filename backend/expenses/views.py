@@ -16,7 +16,7 @@ def create_expense(request):
         serializer.save(user=request.user)
         return JsonResponse({'expense': serializer.data}, status=201)
 
-    return JsonResponse({'error': 'Expense could not be created'}, status=400)
+    return JsonResponse({'errors': serializer.errors}, status=400)
 
 
 @api_view(['GET'])
