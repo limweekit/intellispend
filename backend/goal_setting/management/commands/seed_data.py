@@ -26,7 +26,7 @@ class Command(BaseCommand):
             email = f'testuser{i+1}@example.com'
             user, created = User.objects.get_or_create(username=username, defaults={'email': email})
             if created:
-                user.set_password('password')
+                user.set_password('StrongPassword123!')
                 user.save()
                 self.stdout.write(f'Created user {username}')
             else:
@@ -66,7 +66,8 @@ class Command(BaseCommand):
                     name=f"Goal {_ + 1}",
                     amount=goal_amount,
                     created_at=created_at,
-                    deadline=target_date
+                    deadline=target_date,
+                    current_progress=round(random.uniform(0, goal_amount * 0.5), 2)
                 )
 
             self.stdout.write(self.style.SUCCESS(f'Seeded data for {username}: '

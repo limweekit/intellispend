@@ -136,7 +136,7 @@ export default function ExpensesPage() {
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-2 text-center flex-1">
-          <h3 className="text-lg font-medium text-gray-700">Total Spent</h3>
+          <h3 className="text-lg font-medium text-gray-700">Total Expenses</h3>
           <p className="mt-1 text-xl font-semibold text-gray-900">
             ${total.toFixed(2)}
           </p>
@@ -148,7 +148,7 @@ export default function ExpensesPage() {
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-2 text-center flex-1">
-          <h3 className="text-lg font-medium text-gray-700">Max Expense</h3>
+          <h3 className="text-lg font-medium text-gray-700">Highest Expense</h3>
           <p className="mt-1 text-xl font-semibold text-gray-900">
             ${maximum.toFixed(2)}
           </p>

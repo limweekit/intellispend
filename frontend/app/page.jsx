@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Zap, Tag, Target } from 'lucide-react'
+import { Calendar, Tag, Target } from 'lucide-react'
+import { useLoading } from '@/context/LoadingContext';
 
 export default function HomePage() {
   const router = useRouter()
+  const { setIsLoading } = useLoading();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -16,9 +18,15 @@ export default function HomePage() {
     }
   }, [router])
 
-  const handlePrimary = () => {
-    router.push('/expenses')
-  }
+  const navigate = async (path) => {
+        setIsLoading(true);
+        try {
+          await new Promise((res) => setTimeout(res, 300)); 
+          router.push(path);
+        } finally {
+          setIsLoading(false);
+        }
+    };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -29,15 +37,25 @@ export default function HomePage() {
             Manage Your Finances Effortlessly
           </h2>
           <p className="mt-4 text-xl text-white max-w-2xl">
-            Let us help you categorize expenses, set budgets, and track goals—all
-            in one place.
+            Everything you need, all in one place.
           </p>
-          <button
-            onClick={handlePrimary}
-            className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
-          >
+          <div className="flex gap-10">
+            <button
+              onClick={() => navigate("/expenses")}
+              className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition">
             Track Your Expenses
-          </button>
+            </button>
+            <button
+              onClick={() => navigate("/income")}
+              className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition">
+             Monitor Your Incomes
+            </button>
+            <button
+              onClick={() => navigate("/goals")}
+              className="cursor-pointer mt-8 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition">
+             Set Your Goals
+            </button>
+          </div>
         </main>
       </div>
 
@@ -48,14 +66,14 @@ export default function HomePage() {
             Key Features
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Smart Budgeting */}
+            {/* Financial Calendar */}
             <div className="flex flex-col items-center text-center">
-              <Zap className="w-12 h-12 text-indigo-600 mb-4" />
+              <Calendar className="w-12 h-12 text-indigo-600 mb-4" />
               <h4 className="text-xl text-gray-800 font-semibold mb-2">
-                Smart Budgeting
+                Financial Calendar
               </h4>
               <p className="text-gray-600">
-                AI-powered budgeting that adapts to your spending habits.
+                A unified timeline of all your financial events for smarter, proactive budgeting.
               </p>
             </div>
 
