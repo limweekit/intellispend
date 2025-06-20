@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 import logging
 from rest_framework.response import Response
 from goals.models import Goal
-from pipeline.goal_advisor import GoalAdvisor
+from goal_setting.goal_advisor import GoalAdvisor
 
 logger = logging.getLogger(__name__)
 

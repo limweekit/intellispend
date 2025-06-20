@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'income',
     'goals',
     'insights',
-    'pipeline',
+    'goal_setting',
     'django_celery_beat',
     'exports.apps.ExportsConfig',
 ]
