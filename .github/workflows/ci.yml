@@ -75,7 +75,11 @@ jobs:
           done
 
       - name: Run migrations in backend
-        run: docker compose exec -T backend python manage.py migrate
+        run: |
+          docker compose exec -T backend python manage.py makemigrations
+          docker compose exec -T backend python manage.py makemigrations categories insights
+          docker compose exec -T backend python manage.py migrate
+          docker compose exec -T backend python manage.py migrate categories insights
 
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
