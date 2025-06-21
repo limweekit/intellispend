@@ -11,9 +11,9 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
 
     steps:
       - name: Checkout code
@@ -68,6 +68,17 @@ jobs:
             docker compose exec -T db pg_isready && break
             sleep 2
           done
+
+      - name: Log .env files
+        run: |
+          echo "Root .env:"
+          cat .env
+          echo "Backend .env:"
+          cat backend/.env
+
+      - name: Check db container logs
+        run: |
+          docker compose logs db
 
       - name: Run backend migrations
         run: |
