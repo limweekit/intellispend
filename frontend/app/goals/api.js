@@ -1,7 +1,6 @@
 "use client";
 
 const baseUrl   = `${process.env.NEXT_PUBLIC_API_BASE_URL}/goals`;
-const adviceUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/insights/advice`;
 
 function getToken() {
   if (typeof window === "undefined") return null;
@@ -59,14 +58,4 @@ export async function deleteGoal(id) {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to delete goal");
-}
-
-// Refresh advice for one goal
-export async function getGoalAdvice(goalId) {
-  const token = getToken();
-  const res = await fetch(`${adviceUrl}/${goalId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error("Failed to fetch advice");
-  return res.json();
 }

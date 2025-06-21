@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GET_GOALS_KEY } from "../lib/constants.js";
 import { getGoals } from "./api.js";
@@ -40,7 +40,9 @@ export default function GoalsPage() {
     );
   }
 
-  const goals = data.goals || [];
+  const goals = (data?.goals || []).slice().sort(
+    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+  );
 
   return (
     <div className="p-6">

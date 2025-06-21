@@ -1,61 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteGoal, getGoalAdvice } from "./api.js";
+import { deleteGoal } from "./api.js";
 import { GET_GOALS_KEY } from "../lib/constants.js";
 import { useLoading } from "@/context/LoadingContext";
-import { Edit2, Trash2, Lightbulb } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
+import CircularProgress from "./utils/CircularProgress";
+import AdviceStreamer from "./utils/AdviceStreamer";
 
-// circular progress bar
-function CircularProgress({ percent, size = 120, strokeWidth = 12 }) {
-  const radius = (size - strokeWidth) / 2;
-  const center = size / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (percent / 100) * circumference;
-
-  return (
-    <div className="relative inline-block">
-      <svg
-        width={size}
-        height={size}
-        className="transform -rotate-90"
-      >
-        <circle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke="#e5e7eb"
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-        {/* Progress stroke */}
-        <circle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke="#2563EB"
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-        />
-      </svg>
-      {/* Percentage label */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-lg font-medium text-gray-700">
-          {Math.round(percent)}%
-        </span>
-      </div>
-    </div>
-  );
-}
 
 export default function GoalItem({ goal, onEdit }) {
   const queryClient = useQueryClient();
   const { setIsLoading } = useLoading();
-  const [showAdvice, setShowAdvice] = useState(false);
 
   const deleteMut = useMutation({
     mutationFn: async () => {
@@ -63,18 +20,6 @@ export default function GoalItem({ goal, onEdit }) {
       await deleteGoal(goal.goal_id);
     },
     onSuccess: () => queryClient.invalidateQueries([GET_GOALS_KEY]),
-    onSettled: () => setIsLoading(false),
-  });
-
-  const adviceMut = useMutation({
-    mutationFn: async () => {
-      setIsLoading(true);
-      return getGoalAdvice(goal.goal_id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries([GET_GOALS_KEY]);
-      setShowAdvice(true);
-    },
     onSettled: () => setIsLoading(false),
   });
 
@@ -105,28 +50,13 @@ export default function GoalItem({ goal, onEdit }) {
 
       {/* Deadline */}
       <p className="text-sm text-gray-600">
-        Due {new Date(goal.deadline).toLocaleDateString()}
+          Due {new Date(goal.deadline).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}
       </p>
 
-      {/* Advice List */}
-      {showAdvice && goal.recommended_actions?.length > 0 && (
-        <ul className="list-disc list-inside text-gray-800 space-y-1">
-          {goal.recommended_actions.map((a, i) => (
-            <li key={i}>{a}</li>
-          ))}
-        </ul>
-      )}
+      <AdviceStreamer goalId={goal.goal_id} />
 
       {/* Footer Actions */}
       <div className="pt-4 border-t flex items-center justify-between">
-        <button
-          onClick={() => adviceMut.mutate()}
-          disabled={adviceMut.isLoading}
-          className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg text-base font-medium hover:opacity-90"
-        >
-          <Lightbulb className="w-6 h-6 text-white" />
-          <span>Get Advice</span>
-        </button>
         <div className="flex space-x-4">
           <button
             onClick={onEdit}
