@@ -25,7 +25,9 @@ services:
     command: >
       sh -c "
         python manage.py makemigrations &&
-        python manage.py migrate
+        python manage.py makemigrations categories insights
+        python manage.py migrate &&
+        python manage.py migrate categories insights
       "
     depends_on:
       - db
