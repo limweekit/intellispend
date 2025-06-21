@@ -64,8 +64,8 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and start db and backend only
-        run: docker compose up --build -d db backend
+      - name: Build and start db migrate and backend only
+        run: docker compose up --build -d db migrate backend
 
       - name: Wait for db to be ready
         run: |
