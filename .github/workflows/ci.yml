@@ -1,6 +1,7 @@
 name: CI Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches: [main, feature/ci_pipeline]
   pull_request:
@@ -32,6 +33,12 @@ jobs:
           OLLAMA_API_URL=${{ secrets.OLLAMA_API_URL }}
           CELERY_BROKER_URL=${{ secrets.CELERY_BROKER_URL }}
           EOF
+
+      - name: Make backend scripts executable
+        run: |
+          chmod +x backend/wait-for-db.sh
+          chmod +x backend/wait-for-migrations.sh
+          chmod +x backend/start-ollama.sh
 
       - name: Set up Python
         uses: actions/setup-python@v5
