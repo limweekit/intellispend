@@ -1,0 +1,89 @@
+name: CI Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feature/ci_pipeline]
+  pull_request:
+    branches: [main, feature/ci_pipeline]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      OLLAMA_API_URL: ${{ secrets.OLLAMA_API_URL }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      DB_NAME: ${{ secrets.POSTGRES_DB }}
+      DB_USER: ${{ secrets.POSTGRES_USER }}
+      DB_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      DB_HOST: db
+      DB_PORT: 5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate backend .env
+        run: |
+          cat <<EOF > backend/.env
+          DB_NAME=${{ secrets.POSTGRES_DB }}
+          DB_USER=${{ secrets.POSTGRES_USER }}
+          DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          DB_HOST=db
+          DB_PORT=5432
+          OLLAMA_API_URL=${{ secrets.OLLAMA_API_URL }}
+          CELERY_BROKER_URL=${{ secrets.CELERY_BROKER_URL }}
+          EOF
+
+      - name: Generate root .env
+        run: |
+          cat <<EOF > .env
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          EOF
+
+      - name: Make backend scripts executable
+        run: |
+          chmod +x backend/wait-for-db.sh
+          chmod +x backend/wait-for-migrations.sh
+          chmod +x backend/start-ollama.sh
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and start db migrate and backend only
+        run: docker compose up --build -d db migrate backend
+
+      - name: Wait for db to be ready
+        run: |
+          for i in {1..15}; do
+            docker compose exec -T db pg_isready && break
+            sleep 2
+          done
+
+      - name: Run migrations in backend
+        run: |
+          docker compose exec -T backend python manage.py makemigrations
+          docker compose exec -T backend python manage.py makemigrations categories 
+          docker compose exec -T backend python manage.py migrate
+          docker compose exec -T backend python manage.py migrate categories 
+
+      - name: Run backend tests
+        run: docker compose exec -T backend python manage.py test
+
+      - name: Tear down test containers
+        if: always()
+        run: docker compose down -v
