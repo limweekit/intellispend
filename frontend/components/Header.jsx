@@ -70,6 +70,12 @@ export default function Header() {
                  Goals
                </button>
                <button
+                 onClick={() => navigate("/calendar")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Calendar
+               </button>
+               <button
                  onClick={() => navigate("/profile")}
                  className="cursor-pointer text-gray-800 hover:text-blue-600"
                >

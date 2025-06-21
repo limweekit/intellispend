@@ -99,6 +99,12 @@ export default function HomePage() {
               Set Your Goals
             </button>
             <button
+              onClick={() => navigate("/calendar")}
+              className="cursor-pointer bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
+            >
+              View Your Calendar
+            </button>
+            <button
               onClick={handleExport}
               className="cursor-pointer bg-white text-indigo-700 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-200 transition"
             >
