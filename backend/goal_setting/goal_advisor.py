@@ -6,7 +6,7 @@ from expenses.models import Expense
 from income.models import Income
 from django.utils import timezone
 
-from goal_setting.management.llm_client import get_llm_advice
+from goal_setting.llm_client import get_llm_advice
 
 
 class GoalAdvisor:
@@ -68,8 +68,6 @@ class GoalAdvisor:
     def generate_recommendations(self):
         required_monthly_save, current_savings = self.calculate_savings()
         gap = required_monthly_save - current_savings
-        advice = []
-        monthly_net_income = self.get_monthly_net_income()
 
         curr_expenses = Expense.objects.filter(
             user=self.user,
@@ -78,26 +76,4 @@ class GoalAdvisor:
 
         curr_expense_list = [(e['category__name'], Decimal(e['total_spent'] or 0)) for e in curr_expenses]
 
-        if gap <= 0:
-            advice.append("On track. Keep monitoring your expenses monthly to maintain your progress!")
-            return advice
-
-        total_expense = sum(amt for _, amt in curr_expense_list)
-        if gap > total_expense * Decimal(0.5):
-            advice.append(
-                f"Your targeted monthly savings is ${gap:.2f}/month but your total monthly income is only ${monthly_net_income:.2f}. "
-                "This goal might require increasing your income, extending the deadline or reducing the goal amount."
-            )
-            return advice
-
-        llm_advice = get_llm_advice(self.goal.name, float(gap), curr_expense_list)
-        advice.append(llm_advice)
-
-        return advice
-
-
-    def update_goal_advice(self):
-        advice = self.generate_recommendations()
-        self.goal.recommended_actions = advice
-        self.goal.current_progress = self.get_current_progress()
-        self.goal.save()
+        yield from get_llm_advice(self.goal.name, float(gap), curr_expense_list)
