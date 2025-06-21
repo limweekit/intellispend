@@ -45,7 +45,7 @@ export default function ExpensesItem({
     </div>
   ) : (
     <div
-      className="flex justify-between items-center bg-white rounded-lg shadow p-4 mb-4 hover:bg-gray-50"
+      className="flex justify-between items-center bg-white rounded-lg shadow p-4 mb-4 transform transition-transform hover:shadow-lg hover:-translate-y-1"
       style={{
         borderLeft: `5px solid ${borderColor}`,
       }}

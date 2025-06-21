@@ -55,7 +55,7 @@ export default function AdviceStreamer({ goalId }) {
          <Lightbulb className="w-6 h-6 text-white" />
          {loading ? "Loading..." : "Get Advice"}
       </button>
-      <div className="whitespace-pre-wrap mt-4">{advice}</div>
+      <div className="whitespace-pre-wrap text-gray-800 mt-4">{advice}</div>
     </div>
   );
 }

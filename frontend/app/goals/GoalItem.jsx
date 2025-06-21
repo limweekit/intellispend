@@ -40,7 +40,7 @@ export default function GoalItem({ goal, onEdit }) {
 
       {/* Circular Progress + Amount */}
       <div className="flex items-center">
-        <div className="flex-shrink-0 mr-6 transform -translate-x-4"> {/* skew left */}
+        <div className="flex-shrink-0 mr-6"> 
           <CircularProgress percent={pct} />
         </div>
         <p className="text-lg font-medium text-gray-800">
@@ -49,7 +49,7 @@ export default function GoalItem({ goal, onEdit }) {
       </div>
 
       {/* Deadline */}
-      <p className="text-sm text-gray-600">
+      <p className="text-md text-gray-800">
           Due {new Date(goal.deadline).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}
       </p>
 

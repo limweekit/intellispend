@@ -12,7 +12,7 @@ export default function ProfileCard() {
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
-  const { isLoading, setIsLoading } = useLoading();
+  const { setIsLoading } = useLoading();
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
 

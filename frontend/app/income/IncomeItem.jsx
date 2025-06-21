@@ -43,7 +43,7 @@ export default function IncomeItem({
 
   return (
     <div
-      className="flex justify-between items-center bg-white rounded-lg shadow p-4 mb-4 border-solid"
+      className="flex justify-between items-center bg-white rounded-lg shadow p-4 mb-4 transform transition-transform hover:shadow-lg hover:-translate-y-1"
       style={{ borderLeft: `4px solid ${borderColor}` }}
     >
       <div>

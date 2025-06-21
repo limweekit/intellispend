@@ -123,7 +123,7 @@ export default function IncomePage() {
           onClick={() => setIsCreating((c) => !c)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:opacity-90"
         >
-          {isCreating ? "Cancel" : "New Income"}
+          {isCreating ? "Cancel" : "Add Income"}
         </button>
       </div>
 
