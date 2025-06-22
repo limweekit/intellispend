@@ -89,7 +89,7 @@ export default function CalendarView() {
             "p-2 bg-white border border-gray-600 text-gray-800"
           }
           dayHeaderClassNames={() =>
-            "bg-gray-200 text-gray-800 border-b border-gray-600"
+            "bg-blue-200 text-gray-800 border-b border-gray-600"
           }
           titleFormat={{ year: "numeric", month: "long" }}
           navLinks={true}
