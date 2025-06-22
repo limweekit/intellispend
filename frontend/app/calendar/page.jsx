@@ -1,4 +1,3 @@
-// frontend/app/calendar/page.jsx
 "use client";
 
 import React, { useCallback } from "react";
