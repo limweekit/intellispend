@@ -28,7 +28,7 @@
 
 # 📖 IntelliSpend <a name="about-project"></a>
 
-Our project aims to empower users with AI-powered financial insights that go beyond mere expense tracking. Our system will analyse spending behavior and offer personalised budgeting recommendations to help users optimise their finances effortlessly.
+Our project aims to empower users with AI-powered financial insights that go beyond mere expense tracking. Our system will analyse spending behavior and offer personalised budgeting recommendations to help users optimise their finances effortlessly, along with various other features that aim to help our users improve their spending habits.
 
 
 ## 🛠 Built With <a name="built-with"></a>
@@ -58,13 +58,42 @@ Our project aims to empower users with AI-powered financial insights that go bey
 </details>
 
 <details>
-<summary>Version Control/CICD</summary>
+<summary>LLM</summary>
+  <ul>
+    <li><a href="https://www.ollama.com/">Ollama</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>Async Workers</summary>
+  <ul>
+    <li><a href="https://www.redis.io/">Redis</a></li>
+    <li><a href="https://github.com/celery/celery/">Celery</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>Containerization</summary>
   <ul>
     <li><a href="https://www.docker.com/">Docker</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>CI/CD</summary>
+  <ul>
+    <li><a href="https://github.com/features/actions/">GitHub Actions</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>Version Control</summary>
+  <ul>
     <li><a href="https://www.git-scm.com/">Git</a></li>
     <li><a href="https://www.github.com/">GitHub</a></li>
   </ul>
 </details>
+
 
 <!-- Features -->
 
@@ -72,12 +101,17 @@ Our project aims to empower users with AI-powered financial insights that go bey
 
 - **[User Login/Registration]**
 - **[User Profile Management]**
-- **[REST APIs for Expenses and their Categories]**
+- **[REST APIs for users, expenses, categories, incomes and goals]**
+- **[Smart Goal Setting using rule-based heuristics and LLM]**
+- **[CSV Export with TTL Auto Deletion using Async Workers]**
+- **[Calendar View]**
+- **[Containerization and CI Pipeline]**
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🚀 Showcase <a name="showcase"></a>
-Will be converted into a live demo in future milestones
+Will be converted into a live demo in Milestone 3
 
 
 Login
@@ -132,6 +166,7 @@ In order to run this project you need to install the following:
 - PostgreSQL 13+
 - Node.js 18+
 - Python 3.10+
+- Ollama
 - Docker
 - Docker Desktop
 
@@ -164,81 +199,6 @@ To run the entire app, execute the following command from the root folder:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## 💻 Getting Started (Non-Docker) <a name="getting-started-non-docker"></a>
-
-To get a local copy up and running, follow these steps.
-
-### Prerequisites
-
-In order to run this project you need to install the following:
-
-- PostgreSQL 13+
-- Node.js 18+
-- Python 3.10+
-
-### Setup
-
-Clone this repository to your desired folder:
-
-```sh
-  cd my-folder
-  git clone https://github.com/yh13431/intellispend.git
-```
-
-### Create .env files
-
-Create .env files for both the backend (Django) and frontend (Next.js) by copying their respective example.env files and updating their variables based on your local environment.
-
-```sh
-  cp backend/example.env backend/.env
-  cp frontend/example.env frontend/.env
-```
-
-### Usage
-
-To run the database, ensure you have a local PostgreSQL server running. Log in:
-
-```sh
-  psql -U postgres  
-```
-
-And create a new database:
-
-```sh
-  CREATE DATABASE intellispend_db;
-  CREATE USER intellispend_user WITH PASSWORD 'your_password';
-  GRANT ALL PRIVILEGES ON DATABASE intellispend_db TO intellispend_user;
-```
-
-The DATABASE_URL you will use for your backend/.env file is: 
-
-```sh
-  DATABASE_URL=postgres://intellispend_user:your_password@localhost:5432/intellispend_db
-```
-
-To run the backend, execute the following commands from the root folder:
-
-```sh
-  cd backend
-  python -m venv venv
-  .\venv\Scripts\activate
-  pip install -r requirements.txt
-
-  python manage.py makemigrations
-  python manage.py migrate
-  python manage.py runserver
-```
-
-To run the frontend, execute the following commands from the root folder:
-
-```sh
-  cd frontend
-  npm install --force
-  npm run dev
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- AUTHORS -->
 
 ## 👥 Authors <a name="authors"></a>
@@ -253,15 +213,10 @@ To run the frontend, execute the following commands from the root folder:
 
 ## 🔭 Future Features <a name="future-features"></a>
 
-### Milestone 2
-
-- [ ] **[Smart Budgeting]**
-- [ ] **[Goal Setting and Progress Tracking]**
-- [ ] **[Personal Finance Tips]**
-
 ### Milestone 3
 
 - [ ] **[Joint Budgeting System]**
 - [ ] **[Bill Reminders]**
+- [ ] **[Continuous Deployment]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
