@@ -50,7 +50,12 @@ export default function GoalItem({ goal, onEdit }) {
 
       {/* Deadline */}
       <p className="text-md text-gray-800">
-          Due {new Date(goal.deadline).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}
+           Due: {new Date(goal.deadline).toLocaleDateString('en-SG', {
+            timeZone: 'Asia/Singapore',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })}
       </p>
 
       <AdviceStreamer goalId={goal.goal_id} />
