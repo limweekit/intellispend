@@ -15,7 +15,6 @@
   - [🛠 Built With](#built-with)
     - [Tech Stack](#tech-stack)
     - [Key Features](#key-features)
-  - [🚀 Showcase](#showcase)
 - [💻 Getting Started](#getting-started-docker)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -28,7 +27,7 @@
 
 # 📖 IntelliSpend <a name="about-project"></a>
 
-Our project aims to empower users with AI-powered financial insights that go beyond mere expense tracking. Our system will analyse spending behavior and offer personalised budgeting recommendations to help users optimise their finances effortlessly, along with various other features that aim to help our users improve their spending habits.
+Our project aims to empower users with AI-powered financial insights and other features that go beyond mere expense tracking. Our all-in-one system will analyse spending behavior and offer personalised budgeting recommendations to help users optimise their finances effortlessly, along with various other features that aim to help our users improve their spending habits.
 
 
 ## 🛠 Built With <a name="built-with"></a>
@@ -80,7 +79,7 @@ Our project aims to empower users with AI-powered financial insights that go bey
 </details>
 
 <details>
-<summary>CI/CD</summary>
+<summary>CI</summary>
   <ul>
     <li><a href="https://github.com/features/actions/">GitHub Actions</a></li>
   </ul>
@@ -103,54 +102,12 @@ Our project aims to empower users with AI-powered financial insights that go bey
 - **[User Profile Management]**
 - **[REST APIs for users, expenses, categories, incomes and goals]**
 - **[Smart Goal Setting using rule-based heuristics and LLM]**
-- **[CSV Export with TTL Auto Deletion using Async Workers]**
+- **[CSV Export with TTL auto deletion using async workers]**
 - **[Calendar View]**
 - **[Containerization and CI Pipeline]**
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## 🚀 Showcase <a name="showcase"></a>
-Will be converted into a live demo in Milestone 3
-
-
-Login
-
-![Image](https://github.com/user-attachments/assets/349f89d4-1d3c-4eaf-86d9-d6b13a742ee4)
-
-
-Register
-
-![Image](https://github.com/user-attachments/assets/bf632460-5d5e-4bcd-8828-4207218418ba)
-
-
-Homepage
-
-![Image](https://github.com/user-attachments/assets/390d21b0-5a51-4f28-9e1c-0c92229f2753)
-
-
-User Profile
-
-![Image](https://github.com/user-attachments/assets/9dd90020-7264-48a1-b87a-f41d726ec2a7)
-
-
-Edit User
-
-![Image](https://github.com/user-attachments/assets/870a060f-95a5-489a-b7bf-57b00215adc4)
-
-
-Expenses, creating a new category
-
-![Image](https://github.com/user-attachments/assets/a724c1da-7f73-4ef3-8c83-b86b6d4d0273)
-
-![Image](https://github.com/user-attachments/assets/5abadff2-0d8c-4889-b902-649ac91c86cf)
-
-
-Editing an existing expense
-
-![Image](https://github.com/user-attachments/assets/08bffd34-acb6-4bb1-aff8-39c0b648196a)
-
-![Image](https://github.com/user-attachments/assets/7bb24eb2-d144-4b96-bf1a-1e3155e985b5)
 
 
 <!-- GETTING STARTED -->
@@ -181,13 +138,31 @@ Clone this repository to your desired folder:
 
 ### Create .env files
 
-Create .env files for the root folder, the backend (Django) and frontend (Next.js) by copying their respective example.env files and updating their variables based on your local environment.
+Create .env files for the root folder, the backend (Django) and frontend (Next.js) by copying their respective example.env files.
 
 ```sh
   cp example.env .env
   cp backend/example.env backend/.env
   cp frontend/example.env frontend/.env
 ```
+
+Here is an example of the environment variables that you can use, but it would be better to customise them based on your local environment.
+
+```
+POSTGRES_USER=is_user
+POSTGRES_PASSWORD=is_password
+POSTGRES_DB=is_db
+DB_NAME=is_db
+DB_USER=is_user
+DB_PASSWORD=is_password
+DB_HOST=db
+DB_PORT=5432
+OLLAMA_API_URL=http://localhost:11434/api/generate
+CELERY_BROKER_URL=redis://redis:6379/0
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+```
+
+
 
 ### Usage
 
