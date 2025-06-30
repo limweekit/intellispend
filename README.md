@@ -166,11 +166,39 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 
 ### Usage
 
-To run the entire app, execute the following command from the root folder:
+To run the entire app, execute the following commands from the root folder:
 
 ```sh
+  chmod +x backend/wait-for-db.sh
+  chmod +x backend/start-ollama.sh
   docker-compose up --build
 ```
+
+Access the app in your browser from:
+
+```
+localhost:3000
+```
+
+To view the database using pgAdmin, go to:
+
+```
+localhost:5050
+```
+
+Login using:
+```
+Username: admin@example.com
+Password: admin
+```
+
+After logging in, register a server by doing the following. The password is "is_password".
+
+![image](https://github.com/user-attachments/assets/b9f7ad17-9a9e-49a9-bb68-b22994808c71)
+
+![image](https://github.com/user-attachments/assets/8271189a-93bb-4f55-a4e9-7ab772572149)
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
