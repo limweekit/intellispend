@@ -3,8 +3,8 @@ import requests
 import os
 
 
-OLLAMA_API_URL = os.getenv("OLLAMA_API_URL")
-
+MISTRAL_API_URL = os.getenv("MISTRAL_API_URL")
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 
 def build_goal_advice_prompt(goal_name, gap, expense_list):
     lines = [
@@ -33,22 +33,30 @@ def build_goal_advice_prompt(goal_name, gap, expense_list):
 def get_llm_advice(goal_name, gap, overspending_categories):
     expense_list = overspending_categories or []
     prompt = build_goal_advice_prompt(goal_name, gap, expense_list)
+    headers = {
+        "Authorization": f"Bearer {MISTRAL_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "model": "mistral-small-latest",
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "stream": True,
+    }
 
     def event_stream():
-        with requests.post(
-            OLLAMA_API_URL,
-            json={
-                "model": "hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF:latest",
-                "prompt": prompt,
-                "stream": True,
-            },
-            stream=True,
-        ) as resp:
+        with requests.post(MISTRAL_API_URL, headers=headers, json=data, stream=True) as resp:
             for line in resp.iter_lines():
                 if line:
-                    data = json.loads(line.decode("utf-8"))
-                    response = data.get("response", "")
-                    yield response
+                    if line.startswith(b"data: "):
+                        chunk = line[len(b"data: "):]
+                        if chunk == b"[DONE]":
+                            break
+                        payload = json.loads(chunk.decode("utf-8"))
+                        content = payload.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                        if content:
+                            yield content
 
     return event_stream()
 
