@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'income',
     'goals',
     'insights',
+    'budgeting',
     'goal_setting',
     'finance_calendar',
     'django_celery_beat',
@@ -123,10 +124,6 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
-        'OPTIONS': {
-            'sslmode': 'require',
-            'channel_binding': 'require',
-        },
     }
 }
 
