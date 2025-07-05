@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/insights/', include('insights.urls')),
     path('api/exports/', include('exports.urls')),
     path('api/', include('budgeting.urls')),
+    path('api/bills/', include('bills.urls')),
     path('api/calendar/', include('finance_calendar.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
