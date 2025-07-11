@@ -1,17 +1,52 @@
 "use client";
 
-import {useContext, useState} from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import API from "@/app/lib/api";
 import { useLoading } from "@/context/LoadingContext";
-import {useFormik} from "formik";
-import {AuthContext} from "@/context/AuthContext";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { AuthContext } from "@/context/AuthContext";
+
+// Validation schema 
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .min(2, "Username must be at least 2 characters")
+    .required("Username is required"),
+  email: yup
+    .string()
+    .email("Email must be a valid email address")
+    .required("Email is required"),
+  newPassword: yup
+    .string()
+    .test(
+      "password-strength",
+      "Password must be at least 8 characters, including upper, lower, number, and special characters.",
+      (value) => {
+        if (!value) return true; // optional
+        const hasUpper = /[A-Z]/.test(value);
+        const hasLower = /[a-z]/.test(value);
+        const hasNumber = /\d/.test(value);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        return value.length >= 8 && hasUpper && hasLower && hasNumber && hasSpecial;
+      }
+    ),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('newPassword'), null], "Passwords must match")
+    .when('newPassword', {
+      is: (val) => val && val.length > 0,
+      then: (schema) => schema.required("Please confirm your new password"),
+      otherwise: (schema) => schema.optional(),
+    }),
+});
 
 export default function ProfileForm({ initialUser, onUpdate }) {
   const [passError, setPassError] = useState("");
   const { isLoading, setIsLoading } = useLoading();
   const router = useRouter();
-  const {setCurrentUser, currentUser} = useContext(AuthContext)
+  const {setCurrentUser, currentUser} = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -20,14 +55,9 @@ export default function ProfileForm({ initialUser, onUpdate }) {
       newPassword: "",
       confirmPassword: "",
     },
+    validationSchema: schema,
     onSubmit: async (values) => {
       setPassError("");
-
-      // Password match check
-      if (values.newPassword && values.newPassword !== values.confirmPassword) {
-        setPassError("Passwords do not match");
-        return;
-      }
 
       const payload = {
         username: values.username,
@@ -74,8 +104,14 @@ export default function ProfileForm({ initialUser, onUpdate }) {
           name="username"
           value={formik.values.username}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
+        {formik.touched.username && formik.errors.username && (
+          <p className="text-red-500 text-sm mt-2">
+            {formik.errors.username}
+          </p>
+        )}
       </div>
 
       <div>
@@ -87,8 +123,14 @@ export default function ProfileForm({ initialUser, onUpdate }) {
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
+        {formik.touched.email && formik.errors.email && (
+          <p className="text-red-500 text-sm mt-2">
+            {formik.errors.email}
+          </p>
+        )}
       </div>
 
       <div>
@@ -98,11 +140,17 @@ export default function ProfileForm({ initialUser, onUpdate }) {
         <input
           type="password"
           name="newPassword"
-          value={formik.values.password}
+          value={formik.values.newPassword}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           placeholder="Leave blank to keep current password"
           className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
+        {formik.touched.newPassword && formik.errors.newPassword && (
+          <p className="text-red-500 text-sm mt-2">
+            {formik.errors.newPassword}
+          </p>
+        )}
       </div>
 
       <div>
@@ -112,14 +160,19 @@ export default function ProfileForm({ initialUser, onUpdate }) {
         <input
           type="password"
           name="confirmPassword"
-          onChange={formik.handleChange}
           value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           placeholder="Confirm new password"
           className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
-        {passError && (
-          <p className="text-red-500 text-sm mt-2">{passError}</p>
-        )}
+        {formik.touched.confirmPassword &&
+          formik.errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-2">
+              {formik.errors.confirmPassword}
+            </p>
+          )}
+        {passError && <p className="text-red-500 text-sm mt-2">{passError}</p>}
       </div>
 
       <button
