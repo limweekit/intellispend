@@ -27,12 +27,15 @@ def create_category(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_all_categories(request):
+def get_all_categories(request, category_type=None):
     # View to get all categories
-    if request.method == 'GET':
-        categories = Category.objects.filter(user=request.user)
-        serializer = CategorySerializer(categories, many=True)
-        return JsonResponse({'categories': serializer.data}, safe=False)
+    filters = {'user': request.user}
+    if category_type in ['expense', 'income']:
+        filters['type'] = category_type
+
+    categories = Category.objects.filter(**filters)
+    serializer = CategorySerializer(categories, many=True)
+    return JsonResponse({'categories': serializer.data}, safe=False)
 
 
 @api_view(['GET'])

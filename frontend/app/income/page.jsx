@@ -35,8 +35,8 @@ export default function IncomePage() {
     data: categoriesData,
     isLoading: loadingCategories,
   } = useQuery({
-    queryKey: [GET_CATEGORIES_KEY],
-    queryFn: getCategories,
+    queryKey: [GET_CATEGORIES_KEY, "income"],
+    queryFn: () => getCategories("income"),
   });
 
   // tie spinner to initial fetches

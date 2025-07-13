@@ -4,14 +4,16 @@ from .models import Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['category_id', 'name', 'created_at', 'user_id']
+        fields = ['category_id', 'name', 'created_at', 'user_id', 'type']
         read_only_fields = ['category_id', 'created_at', 'user_id']
 
-    def validate_name(self, value):
+    def validate(self, attrs):
         user = self.context['request'].user
-        if Category.objects.filter(user=user, name=value).exists():
+        type = attrs.get('type')
+        name = attrs.get('name')
+        if Category.objects.filter(user=user, name=name, type=type).exists():
             raise serializers.ValidationError("You already have a category with this name")
-        return value
+        return attrs
 
 
     def create(self, validated_data):

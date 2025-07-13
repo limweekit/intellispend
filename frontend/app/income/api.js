@@ -58,14 +58,14 @@ export async function deleteIncome(id) {
   // 204 returns no content
 }
 
-export async function getCategories() {
+export const getCategories = async (type) => {
   const token = getToken();
-  const res = await fetch(`${categoriesUrl}/`, {
-    headers: { Authorization: `Bearer ${token}` },
+  const res = await fetch(`${categoriesUrl}/type/${type}/`, {
+    headers: { 'Authorization': `Bearer ${token}` },
   });
-  if (!res.ok) throw new Error("Failed to fetch categories");
+  if (!res.ok) throw new Error('Failed to fetch categories');
   return res.json();
-}
+};
 
 export async function createCategory(name) {
   const token = getToken();

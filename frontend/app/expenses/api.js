@@ -61,9 +61,9 @@ export const deleteExpense = async (id) => {
 };
 
 // Categories endpoints
-export const getCategories = async () => {
+export const getCategories = async (type) => {
   const token = getToken();
-  const res = await fetch(`${categoriesUrl}/`, {
+  const res = await fetch(`${categoriesUrl}/type/${type}/`, {
     headers: { 'Authorization': `Bearer ${token}` },
   });
   if (!res.ok) throw new Error('Failed to fetch categories');
