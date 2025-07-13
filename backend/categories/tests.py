@@ -39,14 +39,31 @@ class CategoryAPITestCase(APITestCase):
         response_data = json.loads(response.content.decode('utf-8'))
         self.assertIn("Category could not be created", json.dumps(response_data))
 
-
     def test_get_all_categories(self):
+        Category.objects.create(user=self.user1, name='Investments', type='income')
+
         url = '/api/categories/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(len(response_data['categories']), 2)
+        names = [cat['name'] for cat in response_data['categories']]
+        self.assertIn('Investments', names)
+        self.assertIn('Groceries', names)
+
+        expense_url = '/api/categories/type/expense/'
+        response = self.client.get(expense_url)
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(len(response_data['categories']), 1)
         self.assertEqual(response_data['categories'][0]['name'], 'Groceries')
+
+        income_url = '/api/categories/type/income/'
+        response = self.client.get(income_url)
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(len(response_data['categories']), 1)
+        self.assertEqual(response_data['categories'][0]['name'], 'Investments')
 
 
     def test_get_category_success(self):

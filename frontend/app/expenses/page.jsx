@@ -23,8 +23,8 @@ export default function ExpensesPage() {
   });
 
   const { data: categoriesData, isLoading: loadingCategories } = useQuery({
-    queryKey: [GET_CATEGORIES_KEY],
-    queryFn: getCategories,
+    queryKey: [GET_CATEGORIES_KEY, "expense"],
+    queryFn: () => getCategories("expense"),
   });
 
   const categories = categoriesData?.categories || [];
