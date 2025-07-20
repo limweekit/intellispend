@@ -24,7 +24,7 @@ def create_income(request):
 def get_all_incomes(request):
     incomes = Income.objects.filter(user=request.user)
     serializer = IncomeSerializer(incomes, many=True, context={'request': request})
-    return JsonResponse({'incomes': serializer.data}, safe=False)
+    return JsonResponse({'income': serializer.data}, safe=False)
 
 
 @api_view(['GET'])
@@ -82,4 +82,4 @@ def get_incomes_by_category(request, categoryId):
         category__category_id=categoryId
     )
     serializer = IncomeSerializer(incomes, many=True, context={'request': request})
-    return JsonResponse({'incomes': serializer.data}, safe=False)
+    return JsonResponse({'income': serializer.data}, safe=False)

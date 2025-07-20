@@ -49,7 +49,7 @@ export default function ExpensesForm({
       let categoryId = values.category;
 
       if (showNewCategoryInput && newCategoryName.trim()) {
-        const res = await createCategory(newCategoryName.trim());
+        const res = await createCategory(newCategoryName.trim(), "expense");
         categoryId = res.category.category_id;
       }
       else if (uuidv4Regex.test(values.category)) {
@@ -62,7 +62,7 @@ export default function ExpensesForm({
         if (existing) {
           categoryId = existing.category_id;
         } else {
-          const res = await createCategory(values.category);
+          const res = await createCategory(values.category, "expense");
           categoryId = res.category.category_id;
         }
       }

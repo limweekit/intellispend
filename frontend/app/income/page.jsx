@@ -46,7 +46,7 @@ export default function IncomePage() {
 
   if (loadingIncomes || loadingCategories) return null;
 
-  const incomes    = incomesData?.incomes || [];
+  const incomes = incomesData?.income || [];
   const categories = categoriesData?.categories || [];
 
   // Category colour mapping

@@ -67,7 +67,7 @@ export const getCategories = async (type) => {
   return res.json();
 };
 
-export async function createCategory(name) {
+export async function createCategory(name, type) {
   const token = getToken();
   const res = await fetch(`${categoriesUrl}/create`, {
     method: "POST",
@@ -75,7 +75,7 @@ export async function createCategory(name) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, type }),
   });
   if (!res.ok) throw new Error("Failed to create category");
   return res.json();
