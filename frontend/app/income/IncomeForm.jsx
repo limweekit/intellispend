@@ -48,8 +48,9 @@ export default function IncomeForm({ initialData = {}, onCancel }) {
       // If creating a new category
       if (showNewCategoryInput) {
         const name = values.newCategoryName.trim();
+        const type = 'income'
         try {
-          const res = await createCategory(name);
+          const res = await createCategory(name, type);
           categoryId = res.category.category_id;
         } catch {
           formik.setFieldError(

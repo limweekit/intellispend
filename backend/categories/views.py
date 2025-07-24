@@ -14,9 +14,9 @@ from .serializers import CategorySerializer
 def create_category(request):
     # View for creating a new category
     if request.method == 'POST':
-        data = json.loads(request.body)
-        data['user'] = request.user.id
-        serializer = CategorySerializer(data=request.data, context={'request': request})
+        payload = request.data.copy()
+        payload['user'] = request.user.id
+        serializer = CategorySerializer(data=payload, context={'request': request})
 
         if serializer.is_valid():
             serializer.save(user=request.user)
