@@ -22,10 +22,7 @@ services:
     entrypoint: ["/backend/wait-for-db.sh"]
     command: >
       sh -c "
-        python manage.py makemigrations &&
-        python manage.py makemigrations categories &&
-        python manage.py migrate &&
-        python manage.py migrate categories
+        python manage.py migrate
       "
     depends_on:
       - db
