@@ -82,6 +82,7 @@ Our project aims to empower users with AI-powered financial insights and other f
 <details>
 <summary>Deployment</summary>
   <ul>
+    <li><a href="https://vercel.com">Vercel</a></li>
     <li><a href="https://cloud.google.com/?hl=en">Google Cloud Platform</a></li>
   </ul>
 </details>
