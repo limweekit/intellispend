@@ -64,6 +64,7 @@ jobs:
       - name: Make backend scripts executable
         run: |
           chmod +x backend/wait-for-db.sh
+          chmod +x backend/wait-for-migrations.sh
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -91,7 +92,9 @@ jobs:
       - name: Run migrations
         run: |
           docker compose exec -T backend python manage.py makemigrations
+          docker compose exec -T backend python manage.py makemigrations categories 
           docker compose exec -T backend python manage.py migrate
+          docker compose exec -T backend python manage.py migrate categories 
 
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
