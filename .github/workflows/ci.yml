@@ -79,10 +79,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and start db migrate and backend only
+      - name: Build and start db and backend only
         run: |
           docker compose down -v
-          docker compose up --build -d db migrate backend
+          docker compose up --build -d db backend
 
       - name: Wait for db to be ready
         run: |
@@ -92,9 +92,7 @@ jobs:
           done
 
       - name: Run migrations
-        run: |
-          docker compose exec -T backend python manage.py migrate
-          docker compose exec -T backend python manage.py migrate categories 
+        run: docker compose exec -T backend python manage.py migrate
 
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
