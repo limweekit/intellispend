@@ -9,8 +9,6 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - ollama_docker
 
   migrate:
     build:
@@ -31,8 +29,6 @@ services:
       "
     depends_on:
       - db
-    networks:
-      - ollama_docker
 
   backend:
     working_dir: /backend
@@ -51,15 +47,11 @@ services:
     tty: true
     depends_on:
       - migrate
-    networks:
-      - ollama_docker
 
   redis:
     image: redis:7
     ports:
       - "6379:6379"
-    networks:
-      - ollama_docker
 
   celery:
     build:
@@ -75,8 +67,6 @@ services:
     depends_on:
       - migrate
       - redis
-    networks:
-      - ollama_docker
 
   frontend:
     build:
@@ -88,8 +78,6 @@ services:
       - NODE_ENV=production
     depends_on:
       - backend
-    networks:
-      - ollama_docker
 
   nginx:
     image: nginx:alpine
@@ -99,21 +87,6 @@ services:
       - "80:80"
     depends_on:
       - frontend
-    networks:
-      - ollama_docker
-
-  ollama:
-    image: ollama/ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-      - ./backend/start-ollama.sh:/backend/start-ollama.sh:ro
-    entrypoint: [ "/backend/start-ollama.sh" ]
-    depends_on:
-      - backend
-    networks:
-      - ollama_docker
 
   pgadmin:
     image: dpage/pgadmin4
@@ -122,12 +95,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    networks:
-      - ollama_docker
 
 volumes:
   pgdata:
-  ollama_data:
-
-networks:
-  ollama_docker:

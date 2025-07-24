@@ -3,9 +3,9 @@ name: CI Pipeline
 on:
   workflow_dispatch:
   push:
-    branches: [main, feature/ci_pipeline]
+    branches: [main, bugfix/ci_pipeline]
   pull_request:
-    branches: [main, feature/ci_pipeline]
+    branches: [main, bugfix/ci_pipeline]
 
 jobs:
   build-and-test:
@@ -48,8 +48,6 @@ jobs:
       - name: Make backend scripts executable
         run: |
           chmod +x backend/wait-for-db.sh
-          chmod +x backend/wait-for-migrations.sh
-          chmod +x backend/start-ollama.sh
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -73,13 +71,6 @@ jobs:
             docker compose exec -T db pg_isready && break
             sleep 2
           done
-
-      - name: Run migrations in backend
-        run: |
-          docker compose exec -T backend python manage.py makemigrations
-          docker compose exec -T backend python manage.py makemigrations categories 
-          docker compose exec -T backend python manage.py migrate
-          docker compose exec -T backend python manage.py migrate categories 
 
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
