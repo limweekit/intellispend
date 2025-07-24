@@ -15,13 +15,7 @@
   - [🛠 Built With](#built-with)
     - [Tech Stack](#tech-stack)
     - [Key Features](#key-features)
-- [💻 Getting Started](#getting-started-docker)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-  - [Create .env files](#create-env-files)
-  - [Usage](#usage)
 - [👥 Authors](#authors)
-- [🔭 Future Features](#future-features)
 
 <!-- PROJECT DESCRIPTION -->
 
@@ -59,7 +53,7 @@ Our project aims to empower users with AI-powered financial insights and other f
 <details>
 <summary>LLM</summary>
   <ul>
-    <li><a href="https://www.ollama.com/">Ollama</a></li>
+    <li><a href="https://www.mistral.ai/">Mistral AI</a></li>
   </ul>
 </details>
 
@@ -86,6 +80,13 @@ Our project aims to empower users with AI-powered financial insights and other f
 </details>
 
 <details>
+<summary>Deployment</summary>
+  <ul>
+    <li><a href="https://cloud.google.com/?hl=en">Google Cloud Platform</a></li>
+  </ul>
+</details>
+
+<details>
 <summary>Version Control</summary>
   <ul>
     <li><a href="https://www.git-scm.com/">Git</a></li>
@@ -104,103 +105,14 @@ Our project aims to empower users with AI-powered financial insights and other f
 - **[Smart Goal Setting using rule-based heuristics and LLM]**
 - **[CSV Export with TTL auto deletion using async workers]**
 - **[Calendar View]**
+- **[Joint Budgeting]**
+- **[Bill Email Reminders]**
 - **[Containerization and CI Pipeline]**
+- **[Deployment]**
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- GETTING STARTED -->
-
-## 💻 Getting Started (Docker) <a name="getting-started-docker"></a>
-
-To get a local copy up and running, follow these steps.
-
-### Prerequisites
-
-In order to run this project you need to install the following:
-
-- PostgreSQL 13+
-- Node.js 18+
-- Python 3.10+
-- Ollama
-- Docker
-- Docker Desktop
-
-### Setup
-
-Clone this repository to your desired folder:
-
-```sh
-  cd my-folder
-  git clone https://github.com/yh13431/intellispend.git
-```
-
-### Create .env files
-
-Create .env files for the root folder, the backend (Django) and frontend (Next.js) by copying their respective example.env files.
-
-```sh
-  cp example.env .env
-  cp backend/example.env backend/.env
-  cp frontend/example.env frontend/.env
-```
-
-Here is an example of the environment variables that you can use, but it would be better to customise them based on your local environment.
-
-```
-POSTGRES_USER=is_user
-POSTGRES_PASSWORD=is_password
-POSTGRES_DB=is_db
-DB_NAME=is_db
-DB_USER=is_user
-DB_PASSWORD=is_password
-DB_HOST=db
-DB_PORT=5432
-OLLAMA_API_URL=http://localhost:11434/api/generate
-CELERY_BROKER_URL=redis://redis:6379/0
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
-```
-
-
-
-### Usage
-
-To run the entire app, execute the following commands from the root folder:
-
-```sh
-  chmod +x backend/wait-for-db.sh
-  chmod +x backend/start-ollama.sh
-  docker-compose up --build
-```
-
-Access the app in your browser from:
-
-```
-localhost:3000
-```
-
-To view the database using pgAdmin, go to:
-
-```
-localhost:5050
-```
-
-Login using:
-```
-Username: admin@example.com
-Password: admin
-```
-
-After logging in, register a server by doing the following. The password is "is_password".
-
-![image](https://github.com/user-attachments/assets/b9f7ad17-9a9e-49a9-bb68-b22994808c71)
-
-![image](https://github.com/user-attachments/assets/8271189a-93bb-4f55-a4e9-7ab772572149)
-
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- AUTHORS -->
 
@@ -209,17 +121,5 @@ After logging in, register a server by doing the following. The password is "is_
 👤 **Thia Yi Hong [A0309206L]**  
 
 👤 **Lim Wee Kit [A0309127H]**
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- FUTURE FEATURES -->
-
-## 🔭 Future Features <a name="future-features"></a>
-
-### Milestone 3
-
-- [ ] **[Joint Budgeting System]**
-- [ ] **[Bill Reminders]**
-- [ ] **[Continuous Deployment]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
