@@ -59,7 +59,6 @@ def get_all_users(request):
         users = User.objects.all()
         users_list = [{
             "username": user.username,
-            "password": user.password,
             "email": user.email
         } for user in users]
         return JsonResponse({'users': users_list})
@@ -75,7 +74,6 @@ def get_user(request, username):
             user = User.objects.get(username=username)
             user_data = {
                 "username": user.username,
-                "password": user.password,
                 "email": user.email
             }
             return JsonResponse({'user': user_data})
