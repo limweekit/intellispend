@@ -16,6 +16,7 @@ jobs:
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       OLLAMA_API_URL: ${{ secrets.OLLAMA_API_URL }}
       CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
       DB_NAME: ${{ secrets.POSTGRES_DB }}
       DB_USER: ${{ secrets.POSTGRES_USER }}
       DB_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -28,6 +29,7 @@ jobs:
       - name: Generate backend .env
         run: |
           cat <<EOF > backend/.env
+          ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
           DB_NAME=${{ secrets.POSTGRES_DB }}
           DB_USER=${{ secrets.POSTGRES_USER }}
           DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
