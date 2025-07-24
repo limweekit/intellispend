@@ -11,8 +11,8 @@ class IncomeAPITestCase(APITestCase):
         self.user1 = User.objects.create_user(username='user1', password='password123')
         self.user2 = User.objects.create_user(username='user2', password='password456')
 
-        self.category1 = Category.objects.create(user=self.user1, name="Salary")
-        self.category2 = Category.objects.create(user=self.user2, name="Investment")
+        self.category1 = Category.objects.create(user=self.user1, name="Salary", type="income")
+        self.category2 = Category.objects.create(user=self.user2, name="Investment", type="income")
 
         self.income1 = Income.objects.create(
             user=self.user1,
@@ -73,8 +73,8 @@ class IncomeAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         response_data = json.loads(response.content.decode('utf-8'))
-        self.assertTrue(len(response_data['incomes']) >= 1)
-        self.assertEqual(response_data['incomes'][0]['name'], "Monthly Salary")
+        self.assertTrue(len(response_data['income']) >= 1)
+        self.assertEqual(response_data['income'][0]['name'], "Monthly Salary")
 
 
     def test_get_income_success(self):
@@ -128,5 +128,5 @@ class IncomeAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         response_data = json.loads(response.content.decode('utf-8'))
-        self.assertTrue(len(response_data['incomes']) >= 1)
-        self.assertEqual(response_data['incomes'][0]['category'], str(self.category1.category_id))
+        self.assertTrue(len(response_data['income']) >= 1)
+        self.assertEqual(response_data['income'][0]['category'], str(self.category1.category_id))

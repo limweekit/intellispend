@@ -3,9 +3,9 @@ name: CI Pipeline
 on:
   workflow_dispatch:
   push:
-    branches: [main, feature/ci_pipeline]
+    branches: [main, bugfix/ci_pipeline]
   pull_request:
-    branches: [main, feature/ci_pipeline]
+    branches: [main, bugfix/ci_pipeline]
 
 jobs:
   build-and-test:
@@ -16,11 +16,19 @@ jobs:
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       OLLAMA_API_URL: ${{ secrets.OLLAMA_API_URL }}
       CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
       DB_NAME: ${{ secrets.POSTGRES_DB }}
       DB_USER: ${{ secrets.POSTGRES_USER }}
       DB_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       DB_HOST: db
       DB_PORT: 5432
+      EMAIL_BACKEND: ${{ secrets.EMAIL_BACKEND }}
+      EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+      EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+      EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+      EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+      EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+      DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +36,7 @@ jobs:
       - name: Generate backend .env
         run: |
           cat <<EOF > backend/.env
+          ALLOWED_HOST=${{ secrets.ALLOWED_HOST }}
           DB_NAME=${{ secrets.POSTGRES_DB }}
           DB_USER=${{ secrets.POSTGRES_USER }}
           DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -35,6 +44,13 @@ jobs:
           DB_PORT=5432
           OLLAMA_API_URL=${{ secrets.OLLAMA_API_URL }}
           CELERY_BROKER_URL=${{ secrets.CELERY_BROKER_URL }}
+          EMAIL_BACKEND=${{ secrets.EMAIL_BACKEND }}
+          EMAIL_HOST=${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+          EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+          EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}
+          DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
           EOF
 
       - name: Generate root .env
@@ -49,7 +65,6 @@ jobs:
         run: |
           chmod +x backend/wait-for-db.sh
           chmod +x backend/wait-for-migrations.sh
-          chmod +x backend/start-ollama.sh
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -64,8 +79,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and start db migrate and backend only
-        run: docker compose up --build -d db migrate backend
+      - name: Build and start db and backend only
+        run: |
+          docker compose down -v
+          docker compose up --build -d db backend
 
       - name: Wait for db to be ready
         run: |
@@ -74,12 +91,8 @@ jobs:
             sleep 2
           done
 
-      - name: Run migrations in backend
-        run: |
-          docker compose exec -T backend python manage.py makemigrations
-          docker compose exec -T backend python manage.py makemigrations categories 
-          docker compose exec -T backend python manage.py migrate
-          docker compose exec -T backend python manage.py migrate categories 
+      - name: Run migrations
+        run: docker compose exec -T backend python manage.py migrate
 
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
