@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from .models import Goal
 from .serializers import GoalSerializer
+from goal_setting.goal_advisor import GoalAdvisor
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -13,8 +14,16 @@ def create_goal(request):
     serializer = GoalSerializer(data=data, context={'request': request})
 
     if serializer.is_valid():
-        serializer.save(user=request.user)
-        return JsonResponse({'goal': serializer.data}, status=201)
+        goal = serializer.save(user=request.user)
+
+        advisor = GoalAdvisor(goal)
+        goal.current_progress = advisor.get_current_progress()
+        goal.save(update_fields=["current_progress"])
+
+        refreshed = Goal.objects.get(pk=goal.pk)
+        output = GoalSerializer(refreshed, context={'request': request}).data
+
+        return JsonResponse({'goal': output}, status=201)
 
     return JsonResponse({'error': 'Goal could not be created'}, status=400)
 
