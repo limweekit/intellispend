@@ -72,6 +72,10 @@ jobs:
             sleep 2
           done
 
+      - name: debug backend
+        if: failure()
+        run: docker compose logs backend
+
       - name: Run backend tests
         run: docker compose exec -T backend python manage.py test
 
