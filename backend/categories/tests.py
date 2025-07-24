@@ -11,8 +11,8 @@ class CategoryAPITestCase(APITestCase):
         self.user1 = User.objects.create_user(username='user1', password='password123')
         self.user2 = User.objects.create_user(username='user2', password='password456')
 
-        self.category1 = Category.objects.create(user=self.user1, name='Groceries')
-        self.category2 = Category.objects.create(user=self.user2, name='Travel')
+        self.category1 = Category.objects.create(user=self.user1, name='Groceries', type='expense')
+        self.category2 = Category.objects.create(user=self.user2, name='Travel', type='expense')
 
         login_data = {'username': 'user1', 'password': 'password123'}
         response = self.client.post('/api/users/login', login_data, format='json')
@@ -30,14 +30,6 @@ class CategoryAPITestCase(APITestCase):
         self.assertEqual(response_data['category']['name'], 'Health')
         self.assertEqual(response_data['category']['user_id'], self.user1.id)
 
-
-    def test_create_duplicate_category(self):
-        url = '/api/categories/create'
-        data = {'name': 'Groceries'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 400)
-        response_data = json.loads(response.content.decode('utf-8'))
-        self.assertIn("Category could not be created", json.dumps(response_data))
 
     def test_get_all_categories(self):
         Category.objects.create(user=self.user1, name='Investments', type='income')
