@@ -76,6 +76,12 @@ export default function Header() {
                  Calendar
                </button>
                <button
+                 onClick={() => navigate("/budgeting")}
+                 className="cursor-pointer text-gray-800 hover:text-blue-600"
+               >
+                 Budgeting
+               </button>
+               <button
                  onClick={() => navigate("/profile")}
                  className="cursor-pointer text-gray-800 hover:text-blue-600"
                >
