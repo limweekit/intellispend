@@ -102,7 +102,7 @@ Our project aims to empower users with AI-powered financial insights and other f
 
 - **[User Login/Registration]**
 - **[User Profile Management]**
-- **[REST APIs for users, expenses, categories, incomes and goals]**
+- **[REST API]**
 - **[Smart Goal Setting using rule-based heuristics and LLM]**
 - **[CSV Export with TTL auto deletion using async workers]**
 - **[Calendar View]**
