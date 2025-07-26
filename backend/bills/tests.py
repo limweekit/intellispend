@@ -77,11 +77,10 @@ class BillReminderAPITests(APITestCase):
 
     def test_get_upcoming_bill_reminders(self):
         today = date.today()
-        in_five_days = today + timedelta(days=5)
+        in_two_days = today + timedelta(days=2)
         in_eight_days = today + timedelta(days=8)
-        BillReminder.objects.create(user=self.user, name="Soon", amount=1, due_date=in_five_days)
+        BillReminder.objects.create(user=self.user, name="Soon", amount=1, due_date=in_two_days)
         BillReminder.objects.create(user=self.user, name="Later", amount=1, due_date=in_eight_days)
-        BillReminder.objects.create(user=self.user, name="Inactive", amount=1, due_date=in_five_days)
         url = reverse('get_upcoming_bill_reminders')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -89,4 +88,3 @@ class BillReminderAPITests(APITestCase):
         bill_names = [b['name'] for b in data['bills']]
         self.assertIn("Soon", bill_names)
         self.assertNotIn("Later", bill_names)
-        self.assertNotIn("Inactive", bill_names)

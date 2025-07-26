@@ -85,7 +85,7 @@ def delete_bill_reminder(request, billId):
 @permission_classes([IsAuthenticated])
 def get_upcoming_bill_reminders(request):
     today = timezone.now().date()
-    soon = today + timedelta(days=7)
+    soon = today + timedelta(days=3)
     bills = BillReminder.objects.filter(
         user=request.user,
         due_date__range=(today, soon),
@@ -94,6 +94,7 @@ def get_upcoming_bill_reminders(request):
     return JsonResponse({'bills': serializer.data}, safe=False)
 
 
+# temporary endpoint for testing email functionality
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def send_test_bill_reminder(request):
