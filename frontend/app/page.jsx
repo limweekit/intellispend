@@ -28,17 +28,6 @@ export default function HomePage() {
     }
   };
 
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}`;
-
-  const getToken = () => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    const token = storedUser?.access_token || storedUser?.user?.access_token;
-    if (typeof window !== 'undefined') {
-      return token;
-    }
-    return null;
-  };
-
 
   return (
     <div className="flex flex-col min-h-screen">
