@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
@@ -84,11 +85,35 @@ def delete_bill_reminder(request, billId):
 @permission_classes([IsAuthenticated])
 def get_upcoming_bill_reminders(request):
     today = timezone.now().date()
-    soon = today + timedelta(days=7)
+    soon = today + timedelta(days=3)
     bills = BillReminder.objects.filter(
         user=request.user,
         due_date__range=(today, soon),
-        is_active=True
     )
     serializer = BillReminderSerializer(bills, many=True, context={'request': request})
     return JsonResponse({'bills': serializer.data}, safe=False)
+
+
+# temporary endpoint for testing email functionality
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_test_bill_reminder(request):
+    today = timezone.now().date()
+    soon = today + timedelta(days=3)
+    bills = BillReminder.objects.filter(
+        user=request.user,
+        due_date__range=(today, soon),
+    )
+    for bill in bills:
+        subject = f"Upcoming Bill Due: {bill.name}"
+        message = (
+            f"Dear {bill.user.username},\n\n"
+            f"This is a reminder that your bill for '{bill.name}' in the amount of ${bill.amount:.2f} "
+            f"is due on {bill.due_date}.\n\n"
+            "Thank you for using Intellispend.\n\n"
+            "Best regards,\n"
+            "Intellispend"
+        )
+        recipient = bill.user.email
+        send_mail(subject, message, 'intellispend0@gmail.com', [recipient])
+    return JsonResponse({'message': 'Test bill reminder email sent'})

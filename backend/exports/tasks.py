@@ -30,7 +30,7 @@ def send_upcoming_bill_reminders():
     for bill in bills:
         subject = f"Upcoming Bill Due: {bill.name}"
         message = (
-            f"Dear {bill.user.first_name},\n\n"
+            f"Dear {bill.user.username},\n\n"
             f"This is a friendly reminder that your bill for '{bill.name}' in the amount of ${bill.amount:.2f} "
             f"is due on {bill.due_date}.\n\n"
             "Please ensure timely payment to avoid any late fees or service interruptions.\n\n"
