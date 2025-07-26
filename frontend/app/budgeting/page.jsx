@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useContext } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/context/AuthContext';
 import Link from 'next/link';
 import API from '@/app/lib/api';
@@ -9,6 +9,7 @@ import CreateGroupForm from './CreateGroupForm';
 
 export default function BudgetGroupsPage() {
   const { authLoaded } = useContext(AuthContext);
+  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
 
   const {
@@ -19,6 +20,15 @@ export default function BudgetGroupsPage() {
     queryKey: ['groups'],
     queryFn: () => API.get('/budgeting/groups').then(r => r.data.groups),
     enabled: authLoaded,
+  });
+
+  // Deletion mutation
+  const deleteMutation = useMutation({
+    mutationFn: (groupId) =>
+      API.delete(`/budgeting/groups/delete/${groupId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    },
   });
 
   if (!authLoaded || isLoading) {
@@ -48,13 +58,21 @@ export default function BudgetGroupsPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 {group.name}
               </h2>
-              <div className="flex justify-end">
+              <div className="flex justify-end space-x-2">
                 <Link
                   href={`/budgeting/${group.id}`}
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:opacity-90"
                 >
                   View Details
                 </Link>
+
+                <button
+                  onClick={() => deleteMutation.mutate(group.id)}
+                  disabled={deleteMutation.isLoading}
+                  className="bg-red-600 text-white px-4 py-2 rounded hover:opacity-90"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}

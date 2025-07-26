@@ -10,7 +10,7 @@ import ExpenseForm from '../ExpenseForm';
 export default function GroupDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { currentUser, authLoaded } = useContext(AuthContext);
+  const { authLoaded } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
@@ -47,15 +47,8 @@ export default function GroupDetailPage() {
       setEditingName(false);
     },
   });
-  const deleteMutation = useMutation({
-    mutationFn: () => API.delete(`/budgeting/groups/delete/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
-      router.push('/budgeting');
-    },
-  });
   const addMemberMutation = useMutation({
-    mutationFn: uid =>
+    mutationFn: uid => 
       API.post(`/budgeting/groups/add_member/${id}`, { user_id: uid }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['group', id] }),
@@ -126,23 +119,15 @@ export default function GroupDetailPage() {
           {!editingName ? (
             <>
               <h1 className="text-3xl font-bold text-gray-800">{group.name}</h1>
-              <div className="space-x-2">
-                <button
-                  onClick={() => {
-                    setNewName(group.name);
-                    setEditingName(true);
-                  }}
-                  className="text-blue-600 hover:underline"
-                >
-                  Rename
-                </button>
-                <button
-                  onClick={() => deleteMutation.mutate()}
-                  className="text-red-500 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  setNewName(group.name);
+                  setEditingName(true);
+                }}
+                className="text-blue-600 hover:underline"
+              >
+                Rename
+              </button>
             </>
           ) : (
             <form
@@ -200,14 +185,12 @@ export default function GroupDetailPage() {
               className="flex items-center bg-gray-100 rounded-full px-3 py-1"
             >
               <span className="mr-2 text-gray-800">{u.username}</span>
-              {u.id !== currentUser.user.id && (
-                <button
-                  onClick={() => removeMemberMutation.mutate(u.id)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  &times;
-                </button>
-              )}
+              <button
+                onClick={() => removeMemberMutation.mutate(u.id)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                &times;
+              </button>
             </li>
           ))}
         </ul>
