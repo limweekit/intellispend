@@ -3,12 +3,14 @@
 import { useState, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuthContext } from '@/context/AuthContext';
+import { useLoading } from '@/context/LoadingContext';
 import Link from 'next/link';
 import API from '@/app/lib/api';
 import CreateGroupForm from './CreateGroupForm';
 
 export default function BudgetGroupsPage() {
   const { authLoaded } = useContext(AuthContext);
+  const { setIsLoading } = useLoading();            
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
 
@@ -26,9 +28,11 @@ export default function BudgetGroupsPage() {
   const deleteMutation = useMutation({
     mutationFn: (groupId) =>
       API.delete(`/budgeting/groups/delete/${groupId}`),
+    onMutate: () => setIsLoading(true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
+    onSettled: () => setIsLoading(false),
   });
 
   if (!authLoaded || isLoading) {
