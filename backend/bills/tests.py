@@ -25,7 +25,6 @@ class BillReminderAPITests(APITestCase):
             "name": "Electricity Bill",
             "amount": 100.0,
             "due_date": (date.today() + timedelta(days=3)).isoformat(),
-            "is_active": True
         }
 
     def test_create_bill_reminder(self):
@@ -37,9 +36,9 @@ class BillReminderAPITests(APITestCase):
         self.assertEqual(BillReminder.objects.count(), 1)
 
     def test_get_all_bill_reminders(self):
-        BillReminder.objects.create(user=self.user, name="A", amount=10, due_date=date.today(), is_active=True)
-        BillReminder.objects.create(user=self.user, name="B", amount=20, due_date=date.today(), is_active=False)
-        BillReminder.objects.create(user=self.other_user, name="C", amount=30, due_date=date.today(), is_active=True)
+        BillReminder.objects.create(user=self.user, name="A", amount=10, due_date=date.today())
+        BillReminder.objects.create(user=self.user, name="B", amount=20, due_date=date.today())
+        BillReminder.objects.create(user=self.other_user, name="C", amount=30, due_date=date.today())
         url = reverse('get_all_bill_reminders')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -48,8 +47,7 @@ class BillReminderAPITests(APITestCase):
         self.assertTrue(all(b['name'] in ("A", "B") for b in data['bills']))
 
     def test_get_bill_reminder(self):
-        bill = BillReminder.objects.create(user=self.user, name="Single", amount=99, due_date=date.today(),
-                                           is_active=True)
+        bill = BillReminder.objects.create(user=self.user, name="Single", amount=99, due_date=date.today())
         url = reverse('get_bill_reminder', args=[bill.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -61,8 +59,7 @@ class BillReminderAPITests(APITestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_update_bill_reminder(self):
-        bill = BillReminder.objects.create(user=self.user, name="ToUpdate", amount=1, due_date=date.today(),
-                                           is_active=True)
+        bill = BillReminder.objects.create(user=self.user, name="ToUpdate", amount=1, due_date=date.today())
         url = reverse('update_bill_reminder', args=[bill.pk])
         data = {"amount": 123.45, "name": "Updated Name"}
         response = self.client.put(url, data, format='json')
@@ -72,8 +69,7 @@ class BillReminderAPITests(APITestCase):
         self.assertEqual(bill.name, "Updated Name")
 
     def test_delete_bill_reminder(self):
-        bill = BillReminder.objects.create(user=self.user, name="ToDelete", amount=5, due_date=date.today(),
-                                           is_active=True)
+        bill = BillReminder.objects.create(user=self.user, name="ToDelete", amount=5, due_date=date.today())
         url = reverse('delete_bill_reminder', args=[bill.pk])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
@@ -83,9 +79,9 @@ class BillReminderAPITests(APITestCase):
         today = date.today()
         in_five_days = today + timedelta(days=5)
         in_eight_days = today + timedelta(days=8)
-        BillReminder.objects.create(user=self.user, name="Soon", amount=1, due_date=in_five_days, is_active=True)
-        BillReminder.objects.create(user=self.user, name="Later", amount=1, due_date=in_eight_days, is_active=True)
-        BillReminder.objects.create(user=self.user, name="Inactive", amount=1, due_date=in_five_days, is_active=False)
+        BillReminder.objects.create(user=self.user, name="Soon", amount=1, due_date=in_five_days)
+        BillReminder.objects.create(user=self.user, name="Later", amount=1, due_date=in_eight_days)
+        BillReminder.objects.create(user=self.user, name="Inactive", amount=1, due_date=in_five_days)
         url = reverse('get_upcoming_bill_reminders')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
