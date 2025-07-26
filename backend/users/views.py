@@ -58,6 +58,7 @@ def get_all_users(request):
     if request.method == 'GET':
         users = User.objects.all()
         users_list = [{
+            "id": user.id,
             "username": user.username,
             "email": user.email
         } for user in users]

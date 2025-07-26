@@ -15,8 +15,17 @@ from django.contrib.auth.models import User
 @permission_classes([IsAuthenticated])
 def create_budget_group(request):
     data = json.loads(request.body)
-    data['members'] = [request.user.id]
-    serializer = BudgetGroupSerializer(data=data)
+    members = data.get('members', [])
+
+    if request.user.id not in members:
+        members.append(request.user.id)
+
+    payload = {
+        'name': data.get('name'),
+        'members': members,
+    }
+
+    serializer = BudgetGroupSerializer(data=payload)
     if serializer.is_valid():
         serializer.save()
         return JsonResponse({'group': serializer.data}, status=201)
