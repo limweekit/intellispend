@@ -4,17 +4,17 @@ import { useState, useContext, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import API from '@/app/lib/api';
 import { AuthContext } from '@/context/AuthContext';
+import { useLoading } from '@/context/LoadingContext'; 
 
 export default function CreateGroupForm({ onCancel }) {
   const { currentUser, authLoaded } = useContext(AuthContext);
+  const { setIsLoading } = useLoading();               
   const queryClient = useQueryClient();
-
   const [name, setName] = useState('');
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState([]);
 
-  // once we know who’s logged in, pre-select them
   useEffect(() => {
     if (authLoaded && currentUser) {
       setSelected([currentUser.user]);
@@ -31,6 +31,7 @@ export default function CreateGroupForm({ onCancel }) {
   // Mutation to create the group
   const createGroup = useMutation({
     mutationFn: data => API.post('/budgeting/groups/create', data),
+    onMutate: () => setIsLoading(true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['groups'] });
       setName('');
@@ -39,6 +40,7 @@ export default function CreateGroupForm({ onCancel }) {
       setSelected([currentUser.user]);
       onCancel();    // close the form
     },
+    onSettled: () => setIsLoading(false),
   });
 
   // Search for users to add
@@ -54,13 +56,13 @@ export default function CreateGroupForm({ onCancel }) {
   };
 
   // Add a user to the selected list
-  const addMember = (u) => {
+  const addMember = u => {
     setSelected(prev => [...prev, u]);
     setResults(prev => prev.filter(x => x.id !== u.id));
   };
 
   // Remove a user from the selected list
-  const removeMember = (id) => {
+  const removeMember = id => {
     setSelected(prev => prev.filter(u => u.id !== id));
   };
 

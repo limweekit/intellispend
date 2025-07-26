@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import API from '@/app/lib/api';
 import { AuthContext } from '@/context/AuthContext';
+import { useLoading } from '@/context/LoadingContext';        
 import ExpenseForm from '../ExpenseForm';
 
 export default function GroupDetailPage() {
@@ -12,10 +13,12 @@ export default function GroupDetailPage() {
   const router = useRouter();
   const { authLoaded } = useContext(AuthContext);
   const queryClient = useQueryClient();
+  const { setIsLoading } = useLoading();                      
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [memberSearch, setMemberSearch] = useState('');
   const [memberResults, setMemberResults] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
 
   // Fetch all users
   const { data: users = [] } = useQuery({
@@ -42,22 +45,55 @@ export default function GroupDetailPage() {
   // Mutations
   const renameMutation = useMutation({
     mutationFn: name => API.patch(`/budgeting/groups/update/${id}`, { name }),
+    onMutate: () => setIsLoading(true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['group', id] });
       setEditingName(false);
     },
+    onSettled: () => setIsLoading(false),
   });
+
   const addMemberMutation = useMutation({
-    mutationFn: uid => 
+    mutationFn: uid =>
       API.post(`/budgeting/groups/add_member/${id}`, { user_id: uid }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['group', id] }),
+    onMutate: () => setIsLoading(true),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['group', id] });
+      setMemberSearch('');
+      setMemberResults([]);
+    },
+    onSettled: () => setIsLoading(false),
   });
+
   const removeMemberMutation = useMutation({
     mutationFn: uid =>
       API.post(`/budgeting/groups/remove_member/${id}`, { user_id: uid }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['group', id] }),
+    onMutate: () => setIsLoading(true),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['group', id] });
+    },
+    onSettled: () => setIsLoading(false),
+  });
+
+  const deleteExpenseMutation = useMutation({
+    mutationFn: expenseId =>
+      API.delete(`/budgeting/shared_expenses/delete/${expenseId}`),
+    onMutate: () => setIsLoading(true),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses', id] });
+    },
+    onSettled: () => setIsLoading(false),
+  });
+
+  const updateExpenseMutation = useMutation({
+    mutationFn: ({ expenseId, data }) =>
+      API.patch(`/budgeting/shared_expenses/update/${expenseId}`, data),
+    onMutate: () => setIsLoading(true),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses', id] });
+      setEditingExpense(null);
+    },
+    onSettled: () => setIsLoading(false),
   });
 
   if (!authLoaded || loadingGroup) {
@@ -281,14 +317,42 @@ export default function GroupDetailPage() {
                     </ul>
                   </div>
                 )}
+
+                {/* Edit & Delete actions */}
+                <div className="flex justify-end space-x-2 mt-4">
+                  <button
+                    onClick={() => setEditingExpense(exp)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:opacity-90"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteExpenseMutation.mutate(exp.id)}
+                    disabled={deleteExpenseMutation.isLoading}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:opacity-90"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
+      {/* Inline Edit Expense Form */}
+      {editingExpense && (
+        <ExpenseForm
+          groupId={id}
+          members={memberObjs}
+          initialData={editingExpense}
+          onCancel={() => setEditingExpense(null)}
+          onSuccess={() => setEditingExpense(null)}
+        />
+      )}
+
       {/* Add Expense */}
-      <ExpenseForm groupId={id} members={memberObjs} />
+      {!editingExpense && (<ExpenseForm groupId={id} members={memberObjs} />)}
     </div>
   );
 }
