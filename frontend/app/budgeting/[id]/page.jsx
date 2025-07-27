@@ -11,7 +11,6 @@ import ExpenseForm from '../ExpenseForm';
 export default function GroupDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { authLoaded } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const { setIsLoading } = useLoading();                      
   const [editingName, setEditingName] = useState(false);
@@ -19,6 +18,8 @@ export default function GroupDetailPage() {
   const [memberSearch, setMemberSearch] = useState('');
   const [memberResults, setMemberResults] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
+  const { currentUser, authLoaded } = useContext(AuthContext);
+
 
   // Fetch all users
   const { data: users = [] } = useQuery({
@@ -215,20 +216,21 @@ export default function GroupDetailPage() {
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
         <h2 className="text-2xl font-semibold text-gray-800">Members</h2>
         <ul className="flex flex-wrap gap-2 mb-4">
-          {memberObjs.map(u => (
-            <li
-              key={u.id}
-              className="flex items-center bg-gray-100 rounded-full px-3 py-1"
-            >
-              <span className="mr-2 text-gray-800">{u.username}</span>
-              <button
-                onClick={() => removeMemberMutation.mutate(u.id)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </button>
-            </li>
-          ))}
+          {memberObjs.map(u => {
+            return (
+              <li key={u.id} className="flex items-center bg-gray-100 rounded-full px-3 py-1">
+                <span className="mr-2 text-gray-800">{u.username}</span>
+                {u.id !== currentUser.user.id && (
+                  <button
+                    onClick={() => removeMemberMutation.mutate(u.id)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    &times;
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
         <div className="flex space-x-2">
           <input

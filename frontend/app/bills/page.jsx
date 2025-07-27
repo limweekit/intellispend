@@ -39,12 +39,12 @@ export default function BillsPage() {
   let filtered= [...allBills];
   if (startDate) {
     filtered = filtered.filter(
-      (e) => new Date(e.date) >= new Date(startDate)
+      (e) => new Date(e.due_date) >= new Date(startDate)
     );
   }
   if (endDate) {
     filtered = filtered.filter(
-      (e) => new Date(e.date) <= new Date(endDate)
+      (e) => new Date(e.due_date) <= new Date(endDate)
     );
   }
 
@@ -52,7 +52,7 @@ export default function BillsPage() {
   if (searchTerm.trim()) {
     const term = searchTerm.toLowerCase();
     filtered = filtered.filter((e) =>
-      e.description.toLowerCase().includes(term)
+      e.name.toLowerCase().includes(term)
     );
   }
 
@@ -60,9 +60,9 @@ export default function BillsPage() {
   filtered = [...filtered].sort((a, b) => {
     switch (sortBy) {
       case "date_asc":
-        return new Date(a.date) - new Date(b.date);
+        return new Date(a.due_date) - new Date(b.due_date);
       case "date_desc":
-        return new Date(b.date) - new Date(a.date);
+        return new Date(b.due_date) - new Date(a.due_date);
       case "amount_asc":
         return parseFloat(a.amount) - parseFloat(b.amount);
       case "amount_desc":
